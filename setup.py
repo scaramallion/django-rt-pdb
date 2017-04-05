@@ -19,5 +19,5 @@ setup(
     author='',
     author_email='',
     classifiers=[],
-    install_requires=[django-picklefield]
+    install_requires=['django-picklefield']
 )
