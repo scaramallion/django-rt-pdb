@@ -18,15 +18,14 @@ Quick Start
         'pdbook',
     ]
 
-2. Include the pdbook URLconf in your project ``urls.py``:
+2. Include the *pdbook* URL configuration in your project's ``urls.py``:
 
 .. code-block:: python
 
     url(r'^pdb/' include(pdbook.urls')),
 
 3. Run ``python manage.py migrate`` to create the *pdbook* models in the database.
-4. Start the development server and visit http://127.0.0.1:8000/admin/ to add
-    your *Machine*, *Beam* and *Data* (you'll need the Admin app enabled).
+4. Start the development server and visit http://127.0.0.1:8000/admin/ to add your *Machine*, *Beam* and *Data* (you'll need the Admin app enabled).
 5. Visit http://127.0.0.1:8000/pdb/ to view the planning data.
 
 Dependencies
