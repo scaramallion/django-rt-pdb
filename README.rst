@@ -23,3 +23,9 @@ Quick Start
     pdb (you'll need the Admin app enabled).
     
 5. Visit http://127.0.0.1:8000/pdb/ to view the planning data tables.
+
+Dependencies
+------------
+* `django <https://www.djangoproject.com>`_
+* `floatThead <`pynetdicom <https://github.com/mkoryak/floatThead>`_>`_
+* `Tablesaw <`pynetdicom <https://github.com/filamentgroup/tablesaw>`_>`_
