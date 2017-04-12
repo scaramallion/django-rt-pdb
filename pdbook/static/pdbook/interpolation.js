@@ -34,18 +34,42 @@ $.ajaxSetup({
 var updateTable2D = function(result, status) {
     if (status == "success") {
         var data = $.parseJSON(result.responseText);
-        console.log(data);
         if (data['x_value_ok'] == false) {
-            console.log('Requested X value is not OK')
+            document.getElementById("x_value_2d").style.border = "1px solid #ef0c34";
+            // reset
         } else {
-            console.log('Requested X value is OK')
+            document.getElementById("x_value_2d").style.border = "1px solid #0099dd";
         };
 
         if (data['y_value_ok'] == false) {
-            console.log('Requested Y value is not OK')
+            document.getElementById("y_value_2d").style.border = "1px solid #ef0c34";
+            // reset
         } else {
-            console.log('Requested Y value is OK')
+            document.getElementById("y_value_2d").style.border = "1px solid #0099dd";
         };
+
+        createTable(data['table_data']);
     };
 }
-        
+
+function createTable(tableData) {
+    var table = document.createElement('table');
+    var tableBody = document.createElement('tbody');
+
+    tableData.forEach(function(rowData) {
+        var row = document.createElement('tr');
+
+        rowData.forEach(function(cellData) {
+            var cell = document.createElement('td');
+            cell.appendChild(document.createTextNode(cellData));
+            row.appendChild(cell);
+        });
+
+        tableBody.appendChild(row);
+    });
+
+    table.appendChild(tableBody);
+    document.body.appendChild(table);
+}
+
+

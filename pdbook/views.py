@@ -247,7 +247,12 @@ def _do_interpolate(interpolation_type, x, y, data):
     if not min(data['y_values']) <= y <= max(data['y_values']):
         y_value_ok = False
 
+    result_table = [['1.000', '1.001', '1.002'],
+                    ['1.003', '1.004', '1.005'],
+                    ['1.006', '1.007', '1.008']]
+
     result = {'y_value_ok' : y_value_ok,
-              'x_value_ok' : x_value_ok}
+              'x_value_ok' : x_value_ok,
+              'table_data' : result_table}
 
     return HttpResponse(json.dumps(result), content_type="application/json")
