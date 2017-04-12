@@ -31,21 +31,45 @@ table.beam td{
 .beam a.selected{
     font-weight: 400;
     background-color: #0099dd;
-    color: #fff;
+    color: #eee;
 }
 
 .beam a.unselected{
     font-weight: 100;
     background-color: #fff;
-    color: #000;
+    color: #333;
 }
 
 .beam a.unselected:hover{
     font-weight: 400;
     background-color: #0099dd;
-    color: #fff;
+    color: #eee;
 }
 
 .beam td{
     border: 0px;
+}
+
+@media screen and (max-width: 1000px) {
+    .beam {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .beam {
+        font-size: 10px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .beam {
+        font-size: 8px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .beam {
+        font-size: 6px;
+    }
 }

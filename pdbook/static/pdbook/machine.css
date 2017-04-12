@@ -31,21 +31,45 @@ table.machine td{
 .machine a.selected{
     font-weight: 400;
     background-color: #0099dd;
-    color: #fff;
+    color: #eee;
 }
 
 .machine a.unselected{
     font-weight: 100;
     background-color: #fff;
-    color: #000;
+    color: #333;
 }
 
 .machine a.unselected:hover{
     font-weight: 400;
     background-color: #0099dd;
-    color: #fff;
+    color: #eee;
 }
 
 .machine td{
     border: 0px;
+}
+
+@media screen and (max-width: 1000px) {
+    .machine {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .machine {
+        font-size: 10px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .machine {
+        font-size: 8px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .machine {
+        font-size: 6px;
+    }
 }

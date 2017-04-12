@@ -11,11 +11,6 @@ table.tablesaw {
     font-size: 14px;
 }
 
-/* Table header */
-.tablesaw thead {
-    border: 2px solid #0099DD;
-}
-
 /* Table header cells */
 .tablesaw thead th {
     font-weight: 400;
@@ -27,11 +22,17 @@ table.tablesaw {
     font-size: 12px;
 }
 
+/* Need to specify border-left for first and border-right for last due to floatThead */
 .tablesaw thead tr:first-child th {
     padding-top: .9em;
     padding-bottom: .7em;
     font-family: sans-serif;
     border-right: 1px solid rgba(170, 205, 218, 0.2);
+    border-left: 1px solid #0099DD
+}
+
+.tablesaw thead tr:last-child th {
+    border-right: 1px solid #0099DD
 }
 
 /* Table body cells */
@@ -58,3 +59,36 @@ table.tablesaw {
         border-right: 1px solid rgba(170, 205, 218, 1);
         border-left : 1px solid #e4e1de;
     }
+}
+
+/* Forward/back buttons */
+.tablesaw-btn {
+    border: 1px solid #0099DD;
+}
+
+.tablesaw-btn:hover {
+    background-color: #0099DD;
+}
+
+a.tablesaw-nav-btn.left:before {
+    left: .55em !important;
+    top: .4em !important;
+}
+
+a.tablesaw-nav-btn.right:before {
+    left: .65em !important;
+    top: .4em !important;
+}
+
+a.tablesaw-nav-btn.left:hover:before {
+    border-right: 5px solid #eee !important;
+}
+
+a.tablesaw-nav-btn.right:hover:before {
+    border-left: 5px solid #eee !important;
+}
+
+/* Dots */
+.tablesaw-advance-dots li {
+    padding: .3em .2em;
+}

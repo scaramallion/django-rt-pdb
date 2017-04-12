@@ -31,22 +31,45 @@ table.data td{
 .data a.selected{
     font-weight: 400;
     background-color: #0099dd;
-    color: #fff;
+    color: #eee;
 }
 
 .data a.unselected{
     font-weight: 100;
     background-color: #fff;
-    color: #000;
+    color: #333;
 }
 
 .data a.unselected:hover{
     font-weight: 400;
     background-color: #0099dd;
-    color: #fff;
+    color: #eee;
 }
 
 .data td{
     border: 0px;
 }
 
+@media screen and (max-width: 1000px) {
+    .data {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .data {
+        font-size: 10px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .data {
+        font-size: 8px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .data {
+        font-size: 6px;
+    }
+}

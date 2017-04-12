@@ -164,7 +164,7 @@ class Data(models.Model):
                             storage=OverwriteStorage())
     data_source = models.CharField(max_length=100, blank=True)
     description = models.CharField(max_length=100, blank=True)
-    has_interppolation = models.BooleanField(default=False)
+    has_interpolation = models.BooleanField(default=False)
     interp1D_indexes = models.CharField(max_length=100, blank=True)
     name = models.CharField(max_length=100)
     visible_name = models.CharField(max_length=100)
