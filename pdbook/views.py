@@ -1,5 +1,9 @@
+import json
+
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
+from django.template import RequestContext
+from django.views.decorators.csrf import csrf_protect
 
 from pdbook.models import Machine, Beam, Data
 
@@ -61,6 +65,7 @@ def get_beam(request, machine_name, beam_name):
 
     return render(request, 'pdbook/index.html', context)
 
+@csrf_protect
 def get_data(request, machine_name, beam_name, data_name):
     # Get all machines
     machine_list = _get_machines()
@@ -81,7 +86,10 @@ def get_data(request, machine_name, beam_name, data_name):
     d = Data.objects.filter(beam=b).filter(name=data_name)[0]
 
     # Parse the data
-    table_data = _read_data_file(d)
+    try:
+        table_data = _read_data_file(d)
+    except:
+        print('Error reading data file')
 
     # Build response
     context = {}
@@ -97,9 +105,36 @@ def get_data(request, machine_name, beam_name, data_name):
 
     return render(request, 'pdbook/index.html', context)
 
-def interpolate_wrapper(request):
-    return HttpResponse('')
+def interpolate(request, machine_name, beam_name, data_name):
+    # Get all machines
+    machine_list = _get_machines()
 
+    # Get selected machine
+    m = Machine.objects.filter(name=machine_name)[0]
+
+    # Get all beams for the selected machine
+    beam_list = _get_beams(m)
+
+    # Get the selected beam
+    b = Beam.objects.filter(name=beam_name)[0]
+
+    # Get all data for the selected beam
+    data_list = _get_data(b)
+
+    # Get the selected data
+    d = Data.objects.filter(beam=b).filter(name=data_name)[0]
+
+    data = _read_data_file(d)
+
+    if 'x_value' in request.POST.keys():
+        x = float(request.POST['x_value'])
+
+    if 'y_value' in request.POST.keys():
+        y = float(request.POST['y_value'])
+
+    result = _do_interpolate('2D', x, y, data)
+
+    return result
 
 def _get_machines():
     """
@@ -146,8 +181,10 @@ def _read_data_file(data):
         A dict containing the table data
     """
     header_labels = None
+    x_title = ''
     x_values = None
     x_format = '{}'
+    y_title = ''
     y_values = None
     y_format = '{}'
     xy_values = []
@@ -173,12 +210,16 @@ def _read_data_file(data):
                         x_values = [float(val) for val in values]
                     elif line_type == 'X_FORMAT':
                         x_format = values[0]
+                    elif line_type == 'X_TITLE':
+                        x_title = values[0]
                     elif line_type == 'XY_FORMAT':
                         xy_format = values[0]
                     elif line_type == 'Y_VALUES':
                         y_values = [float(val) for val in values]
                     elif line_type == 'Y_FORMAT':
                         y_format = values[0]
+                    elif line_type == 'Y_TITLE':
+                        y_title = values[0]
                 else:
                     xy_values.append([float(val) for val in line_list])
 
@@ -190,5 +231,23 @@ def _read_data_file(data):
         data_row.insert(0, y_format.format(first_row))
 
     return {'header_labels' : header_labels,
-             'table_data' : values_out}
+             'table_data' : values_out,
+             'x_title' : x_title,
+             'x_values' : x_values,
+             'y_title' : y_title,
+             'y_values' : y_values}
 
+def _do_interpolate(interpolation_type, x, y, data):
+    x_value_ok = True
+    y_value_ok = True
+
+    if not min(data['x_values']) <= x <= max(data['x_values']):
+        x_value_ok = False
+
+    if not min(data['y_values']) <= y <= max(data['y_values']):
+        y_value_ok = False
+
+    result = {'y_value_ok' : y_value_ok,
+              'x_value_ok' : x_value_ok}
+
+    return HttpResponse(json.dumps(result), content_type="application/json")

@@ -12,5 +12,5 @@ urlpatterns = [
     # ex: /pdb/TestMachine/6MVPhotons/PDD
     url(r'^(?P<machine_name>\w+)/(?P<beam_name>\w+)/(?P<data_name>\w+)$', views.get_data, name='data'),
     # interpolation function
-    url(r'^(?P<machine_name>\w+)/(?P<beam_name>\w+)/(?P<data_name>\w+)/interpolate$', views.interpolate_wrapper, name='interpolate'),
+    url(r'^(?P<machine_name>\w+)/(?P<beam_name>\w+)/(?P<data_name>\w+)/interpolate$', views.interpolate, name='interpolate'),
 ]

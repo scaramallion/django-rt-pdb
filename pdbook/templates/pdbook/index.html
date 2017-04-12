@@ -8,7 +8,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'pdbook/machine.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'pdbook/beam.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'pdbook/data.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'pdbook/interpolation.css' %}" />
     <!-- TABLESAW -->
     <link rel="stylesheet" type="text/css" href="{% static 'pdbook/tablesaw.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'pdbook/tablesaw_overrides.css' %}" />
@@ -28,6 +27,24 @@
       $(function(){
         $('a[rel*=leanModal]').leanModal({top: 200, closeButton: ".modal_close"});
       });
+    </script>
+    <!-- INTERPOLATION -->
+    <link rel="stylesheet" type="text/css" href="{% static 'pdbook/interpolation.css' %}" />
+    <script type="text/javascript" src="{% static 'pdbook/interpolation.js' %}"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $("#interpolation-form-2D").submit(function(event) {
+          $.ajax({
+            type: "POST",
+            url: "{{ request.path }}/interpolate",
+            data: {'x_value' : $('#x_value_2d').val(),
+                   'y_value' : $('#y_value_2d').val()
+                  },
+            complete: [updateTable2D]
+          });
+          return false;
+        });
+    });
     </script>
   </head>
   <body>
@@ -138,31 +155,38 @@
           <!-- END OF DATA TABLE -->
       {% endif %}
     </data_table>
-    <div id="modal-interpolate" style="display: none;">
+    <div id="modal-interpolate">
+      {% if selected_data %}
       <form method='post' id='interpolation-form-2D'>
         {% csrf_token %}
         <div class="interpolation-data">
           <table class="interpolation-table">
+            <!-- x and y value titles -->
             <tr>
-     
+              <td rowspan="2" style="color: #666 !important;">{{ y_title|safe }}</th>
+              <td colspan="3" style=" text-align: center; color: #666 !important;">{{ x_title|safe }}</td>
             </tr>
+            <!-- x neighbour, x value, x neighbour -->
             <tr>
               <td class="interpolation-data-col" id="xA"></td>
-              <td><input id="x" type="text"></td>
+              <td><input id="x_value_2d" type="text"></td>
               <td class="interpolation-data-col" id="xB"></td>
             </tr>
+            <!-- y neighbour, lookup, interpolated, lookup -->
             <tr>
               <td class="interpolation-data-row" id="yA"></td>
               <td id="xAyA"></td>
               <td class="interpolation-data-lowlight" id="xyA"></td>
               <td id="xByA"></td>
             </tr>
+            <!-- y value, interpolate, result, interpolated -->
             <tr>
-              <td><input id="y" type="text"></td>
+              <td><input id="y_value_2d" type="text"></td>
               <td class="interpolation-data-lowlight" id="xAy"></td>
               <td class="interpolation-result" id="xy"></td>
               <td class="interpolation-data-lowlight" id="xBy"></td>
             </tr>
+            <!-- y neighbour, lookup, interpolated, lookup -->
             <tr>
               <td class="interpolation-data-row" id="yB"></td>
               <td id="xAyB"></td>
@@ -175,6 +199,7 @@
           <button type="submit" id="calculate">Calculate</button>
         </div>
       </form>
+      {% endif %}
     </div>
     <div id="modal-info">
         Description: {{ selected_data.description }} <br />

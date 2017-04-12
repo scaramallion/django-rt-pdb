@@ -22,13 +22,11 @@ Quick Start
 
 .. code-block:: python
 
-    url(r'^pdb/' include(pdbook.urls')),
+    url(r'^pdb/', include(pdbook.urls')),
 
-3. Run ``python manage.py migrate`` to create the *pdbook* models in the
-database.
+3. Run ``python manage.py migrate`` to create the *pdbook* models in the database.
 
-4. Start the development server and visit http://127.0.0.1:8000/admin/ to add
-your *Machines*, *Beams* and *Data* (you'll need the Admin app enabled).
+4. Start the development server and visit http://127.0.0.1:8000/admin/ to add your *Machines*, *Beams* and *Data* (you'll need the Admin app enabled).
 
 5. Visit http://127.0.0.1:8000/pdb/ to view the planning data.
 
