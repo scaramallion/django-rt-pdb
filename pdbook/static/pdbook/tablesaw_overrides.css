@@ -1,0 +1,60 @@
+.tablesaw-wrapper {
+    max-width: 100%;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+}
+
+table.tablesaw {
+    color: #666666;
+    font-size: 14px;
+}
+
+/* Table header */
+.tablesaw thead {
+    border: 2px solid #0099DD;
+}
+
+/* Table header cells */
+.tablesaw thead th {
+    font-weight: 400;
+    background-color: #0099dd;
+    color: #eee;
+    line-height: 1em;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 12px;
+}
+
+.tablesaw thead tr:first-child th {
+    padding-top: .9em;
+    padding-bottom: .7em;
+    font-family: sans-serif;
+    border-right: 1px solid rgba(170, 205, 218, 0.2);
+}
+
+/* Table body cells */
+.tablesaw td {
+    line-height: 1em;
+    text-align: center;
+    vertical-align: middle;
+    border-right: 1px solid #e4e1de;
+}
+
+/* Table body nth (odd) rows */
+.tablesaw tr:nth-child(odd){
+    background-color: #eeeeee;
+}
+
+/* Table rows have a gray bottom stroke by default */
+.tablesaw tbody tr {
+    border-bottom: 1px solid #dfdfdf;
+}
+
+@media only all {
+    /* Change the right border on the persist cells */
+    .tablesaw-swipe .tablesaw-cell-persist {
+        border-right: 1px solid rgba(170, 205, 218, 1);
+        border-left : 1px solid #e4e1de;
+    }

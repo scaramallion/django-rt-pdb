@@ -20,6 +20,9 @@ class MachineAdmin(admin.ModelAdmin):
 
 
 class DataAdmin(admin.ModelAdmin):
+    list_display = ('visible_name', 'beam')
+
+    '''
     @register.inclusion_tag('admin/pdbook/submit_line.html', takes_context=True)
     def submit_row(request):
         """
@@ -47,7 +50,7 @@ class DataAdmin(admin.ModelAdmin):
             'show_save': show_save,
         })
         return ctx
-
+    '''
 
 admin.site.register(Machine, MachineAdmin)
 admin.site.register(Data, DataAdmin)

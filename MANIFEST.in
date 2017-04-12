@@ -3,3 +3,4 @@ include README.RST
 recursive-include pdb/static *
 recursive-include pdb/templates *
 recursive-include docs *
+recursive-include samples *

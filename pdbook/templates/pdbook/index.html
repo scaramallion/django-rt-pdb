@@ -1,0 +1,121 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <title>Planning Data - Your Department - Your Hospital</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'pdbook/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'pdbook/machine.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'pdbook/beam.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'pdbook/data.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'pdbook/interpolation.css' %}" />
+    <!-- TABLESAW -->
+    <link rel="stylesheet" type="text/css" href="{% static 'pdbook/tablesaw.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'pdbook/tablesaw_overrides.css' %}" />
+    <script type="text/javascript" src="{% static 'pdbook/tablesaw.js' %}"></script>
+    <script type="text/javascript" src="{% static 'pdbook/tablesaw-init.js' %}"></script>
+  </head>
+  <body>
+    <selector>
+      <!-- SELECTOR FOR MACHINES -->
+      {% if machine_list %}
+        <table class="machine">
+          <tr>
+            {% for machine in machine_list %}
+              {% if machine == selected_machine %}
+                <td>
+                  <a class="selected" href="{% url 'machine' machine.name %}" title="{{machine.description}}">{{ machine.visible_name|safe }}</a>
+                </td>
+              {% else %}
+                <td>
+                  <a class="unselected" href="{% url 'machine' machine.name %}" title="{{machine.description}}">{{ machine.visible_name|safe }}</a>
+                </td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        </table>
+      {% else %}
+        <p style="text-align: center">No machines have been added</p>
+      {% endif %}
+      <!-- END SELECTOR FOR MACHINES -->
+      <!-- SELECTOR FOR BEAMS -->
+      {% if beam_list %} 
+        <table class="beam">
+          <tr>
+            {% for beam in beam_list %}
+              {% if beam == selected_beam %}
+                <td>
+                  <a class="selected" href="{% url 'beam' selected_machine.name beam.name %}">{{beam.visible_name|safe }}</a>
+                </td>
+              {% else %}
+                <td>
+                  <a class="unselected" href="{% url 'beam' selected_machine.name beam.name %}">{{ beam.visible_name|safe }}</a>
+                </td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        </table>
+      {% else %}
+        {% if selected_machine %}
+          <p style="text-align: center">No beams have been added for the selected machine</p>
+        {% endif %}
+      {% endif %}
+      <!-- END SELECTOR FOR BEAM -->
+      <!-- SELECTOR FOR DATA -->
+      {% if data_list %}
+        <table class="data">
+          <tr>
+            {% for data in data_list %}
+              {% if data == selected_data %}
+                <td>
+                  <a class="selected" title="{{data.data_about}}" href="{% url 'data' selected_machine.name selected_beam.name data.name %}">{{ data.visible_name|safe }}</a>
+                </td>
+              {% else %}
+                <td>
+                  <a class="unselected" title="{{data.data_about}}" href="{% url 'data' selected_machine.name selected_beam.name data.name %}">{{ data.visible_name|safe }}</a>
+                </td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        </table>
+      {% else %}
+        {% if selected_beam %}
+          <p style="text-align: center">No data has been added for the selected beam</p>
+        {% endif %}
+      {% endif %}
+      <!-- END SELECTOR FOR DATA -->
+    </selector>
+    <data_table>
+      {% if selected_data %}
+          <!-- START OF DATA TABLE -->
+          <div class="tablesaw-wrapper">
+            <table class="tablesaw tablesaw-swipe" data-tablesaw-mode="swipe" data-tablesaw-minimap>
+              <!-- TABLE HEADER -->
+              <thead>
+                <tr>
+                  {% for label in header_labels %}
+                    {% if forloop.first %}
+                      <th class="tablesaw-cell-persist" data-tablesaw-priority="persist">{{ label|safe }}</th>
+                    {% else %}
+                      <th>{{ label|safe }}</th>
+                    {% endif %}
+                  {% endfor %}
+                </tr>
+              </thead>
+              <!-- TABLE BODY -->
+              <tbody>
+                {% for row in table_data %}
+                  <tr>
+                    {% for value in row %}
+                      <td>{{ value|safe }}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <!-- END OF DATA TABLE -->
+      {% endif %}
+    </data_table>
+  </body>
+</html>

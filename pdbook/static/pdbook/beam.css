@@ -1,0 +1,51 @@
+table.beam{
+    empty-cells: show;
+    max-width: 100%;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3px;
+    border: 0px;
+    border-spacing: 0;
+}
+
+table.beam td:first-child{
+    padding-left: 0px;
+}
+
+table.beam td{
+    padding-left: 3px;
+}
+
+.beam a{
+    display:block;
+    text-decoration:none;
+    font-family: sans-serif;
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: 1px solid #0099dd;
+}
+
+.beam a.selected{
+    font-weight: 400;
+    background-color: #0099dd;
+    color: #fff;
+}
+
+.beam a.unselected{
+    font-weight: 100;
+    background-color: #fff;
+    color: #000;
+}
+
+.beam a.unselected:hover{
+    font-weight: 400;
+    background-color: #0099dd;
+    color: #fff;
+}
+
+.beam td{
+    border: 0px;
+}

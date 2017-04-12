@@ -39,7 +39,7 @@ class Machine(models.Model):
                                     default='LINAC')
     manufacturer = models.CharField(max_length=100, blank=True)
     model = models.CharField(max_length=100, blank=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     serial_number = models.CharField(max_length=100, blank=True)
     visible_name = models.CharField(max_length=100)
 
@@ -93,8 +93,8 @@ class Beam(models.Model):
         energy_mode = ''
         if self.modality != 'ISO':
             energy_mode = '({0} {1})'.format(self.energy, mode_str[self.modality])
-        
-        s = "{0} {1}".format(self.visible_name, energy_mode)
+        # TODO: Sort by machine name then photons, electrons, then energy
+        s = "{2} - {0} - ({1})".format(self.visible_name, self.description, self.machine.visible_name)
         return s
 
 
@@ -157,10 +157,10 @@ class Data(models.Model):
     class Meta:
         verbose_name_plural = "Data"
     
-    manager = DataManager()
+    objects = DataManager()
     
     beam = models.ForeignKey(Beam, related_name="beam_name", default=0)
-    data = models.FileField(upload_to=manager._upload_directory_path,
+    data = models.FileField(upload_to=objects._upload_directory_path,
                             storage=OverwriteStorage())
     data_source = models.CharField(max_length=100, blank=True)
     description = models.CharField(max_length=100, blank=True)
@@ -168,9 +168,10 @@ class Data(models.Model):
     interp1D_indexes = models.CharField(max_length=100, blank=True)
     name = models.CharField(max_length=100)
     visible_name = models.CharField(max_length=100)
-    
+
     def __init__(self, *args, **kwargs):
         super(Data, self).__init__(*args, **kwargs)
+        # I don't think these get stored
         self.x_headers = None
         self.x_values = None
         self.x_format = None
@@ -179,47 +180,9 @@ class Data(models.Model):
         self.y_format = None
         self.xy_data = None
         self.xy_format = None
-
+    
     def __str__(self):
         """Return a str representation of the Data."""
         s = '{0}'.format(self.visible_name)
         return s
 
-    def save(self, *args, **kwargs):
-        """Override to allow checking of the uploaded data."""
-        super(Data, self).save(*args, **kwargs)
-        self._read_data_file()
-
-    def _read_data_file(self):
-        """Parse the uploaded data file for the contents"""
-        
-        print(self.data.url)
-        self.xy_data = []
-        with open(self.data.path, 'r') as f:
-            contents = f.readlines()
-            for line in contents:
-                # Strip out any comments
-                if '#' in line:
-                    line = line[:line.index('#')]
-                # Remove white space
-                line = line.strip()
-                if line != '':
-                    line_list = line.split(',')
-                    if '=' in line_list[0]:
-                        line_type = line_list[0].split('=')[0].strip()
-                        values = [line_list[0].split('=')[1]]
-                        values.extend(line_list[1:])
-                        setattr(self, line_type.lower(), values)
-                    else:
-                        self.xy_data.append([float(val) for val in line_list])
-        
-        if self.x_values:
-            self.x_values = [float(val) for val in self.x_values]
-        if self.y_values:
-            self.y_values = [float(val) for val in self.y_values]
-        
-        #print(self.xy_data)
-        print(self.x_values)
-        print(self.x_headers)
-        print(self.x_format)
-        print(self.y_values)
