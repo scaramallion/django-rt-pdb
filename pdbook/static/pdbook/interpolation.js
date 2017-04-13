@@ -48,19 +48,36 @@ var updateTable2D = function(result, status) {
             document.getElementById("y_value_2d").style.border = "1px solid #0099dd";
         };
 
-        createTable(data['table_data']);
+        createTable(data['table_type'], data['table_data'], data['x_title'], data['y_title']);
     };
 }
 
-function createTable(tableData) {
-    var table = document.createElement('table');
+function updateTable(tableData) {
+    //
+}
+
+function createTable(tableType, tableData, tableXTitle, tableYTitle) {
+    var table = document.getElementById('interpolation-table');
     var tableBody = document.createElement('tbody');
 
-    tableData.forEach(function(rowData) {
+    tableData.forEach(function(rowData, ii) {
         var row = document.createElement('tr');
 
-        rowData.forEach(function(cellData) {
+        rowData.forEach(function(cellData, jj) {
             var cell = document.createElement('td');
+            if (tableType == '1D' && ii == 1) {
+                cell.id = "interpolation-result-cell";
+            }
+
+            if (tableType == '2D') {
+                if (ii == 1 && [0, 2].includes(jj)) {
+                    cell.id = "interpolation-intermediary-cell";
+                } else if ([0, 2].includes(ii) && jj == 1) {
+                    cell.id = "interpolation-intermediary-cell";
+                } else if (ii == 1 && jj == 1) {
+                    cell.id = "interpolation-result-cell";
+                }
+            }
             cell.appendChild(document.createTextNode(cellData));
             row.appendChild(cell);
         });
@@ -68,8 +85,11 @@ function createTable(tableData) {
         tableBody.appendChild(row);
     });
 
+    if (tableType == '2D') {
+    } else if (tableType == '1D') {
+        
+    }
+
     table.appendChild(tableBody);
-    document.body.appendChild(table);
+    //document.body.appendChild(table);
 }
-
-

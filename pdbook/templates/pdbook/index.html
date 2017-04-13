@@ -159,43 +159,38 @@
       {% if selected_data %}
       <form method='post' id='interpolation-form-2D'>
         {% csrf_token %}
-        <div class="interpolation-data">
+        <div class="interpolation-container">
           <table class="interpolation-table">
-            <!-- x and y value titles -->
             <tr>
-              <td rowspan="2" style="color: #666 !important;">{{ y_title|safe }}</th>
-              <td colspan="3" style=" text-align: center; color: #666 !important;">{{ x_title|safe }}</td>
+              <td rowspan="2" style="color: #666 !important;">{{ y_title|safe }}</td>
+              <td colspan="3" style="color: #666 !important;">{{ x_title|safe }}</td>
             </tr>
-            <!-- x neighbour, x value, x neighbour -->
             <tr>
-              <td class="interpolation-data-col" id="xA"></td>
-              <td><input id="x_value_2d" type="text"></td>
-              <td class="interpolation-data-col" id="xB"></td>
+              <td class="input-near" id="x-a"></td>
+              <td><input id="x-input" type="text"></td>
+              <td class="input-near" id="x-b"></td>
             </tr>
-            <!-- y neighbour, lookup, interpolated, lookup -->
             <tr>
-              <td class="interpolation-data-row" id="yA"></td>
-              <td id="xAyA"></td>
-              <td class="interpolation-data-lowlight" id="xyA"></td>
-              <td id="xByA"></td>
+              <td class="input-near" id="y-a"></td>
+              <td id="tl"></td>
+              <td id="tc"></td>
+              <td id="tr"></td>
             </tr>
-            <!-- y value, interpolate, result, interpolated -->
             <tr>
-              <td><input id="y_value_2d" type="text"></td>
-              <td class="interpolation-data-lowlight" id="xAy"></td>
-              <td class="interpolation-result" id="xy"></td>
-              <td class="interpolation-data-lowlight" id="xBy"></td>
+              <td><input id="input-input" type="text"></td>
+              <td id="cl"></td>
+              <td id="interp-result"></td>
+              <td id="cr"></td>
             </tr>
-            <!-- y neighbour, lookup, interpolated, lookup -->
             <tr>
-              <td class="interpolation-data-row" id="yB"></td>
-              <td id="xAyB"></td>
-              <td class="interpolation-data-lowlight" id="xyB"></td>
-              <td id="xByB"></td>
+              <td class="y-near" id="y-b"></td>
+              <td id="bl"></td>
+              <td id="bc"></td>
+              <td id="br"></td>
             </tr>
           </table>
         </div>
-        <div class="interpolation-do">
+        <div class="interp-btn">
           <button type="submit" id="calculate">Calculate</button>
         </div>
       </form>

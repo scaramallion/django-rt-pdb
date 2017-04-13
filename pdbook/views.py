@@ -253,6 +253,9 @@ def _do_interpolate(interpolation_type, x, y, data):
 
     result = {'y_value_ok' : y_value_ok,
               'x_value_ok' : x_value_ok,
-              'table_data' : result_table}
+              'table_type' : '2D',
+              'table_data' : result_table,
+              'x_title' : 'X Title',
+              'y_title' : 'Y Title'}
 
     return HttpResponse(json.dumps(result), content_type="application/json")
