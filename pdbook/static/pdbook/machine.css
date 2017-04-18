@@ -1,23 +1,30 @@
-table.machine{
-    empty-cells: show;
-    max-width: 100%;
+.machine {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     width: 80%;
     margin-left: auto;
     margin-right: auto;
-    border: 0px;
     margin-top: 3px;
-    border-spacing: 0;
+    display: table;
+    table-layout: fixed;
+    overflow: hidden;
 }
 
-table.machine td:first-child{
-    padding-left: 0px;
-}
-
-table.machine td{
+.machine li {
+    display: table-cell;
+    *float: left;
+    height: 21px;
+    text-align: center;
     padding-left: 3px;
+    vertical-align: middle;
 }
 
-.machine a{
+.machine li:first-child {
+    padding-left: 0;
+}
+
+.machine li a{
     display:block;
     text-decoration:none;
     padding-top: 5px;
@@ -26,28 +33,25 @@ table.machine td{
     vertical-align: middle;
     text-align: center;
     border: 1px solid #0099dd;
+    height: 21px;
 }
 
-.machine a.selected{
+.machine li a.selected{
     font-weight: 400;
     background-color: #0099dd;
     color: #eee;
 }
 
-.machine a.unselected{
+.machine li a.unselected{
     font-weight: 100;
     background-color: #fff;
     color: #333;
 }
 
-.machine a.unselected:hover{
+.machine li a.unselected:hover{
     font-weight: 400;
     background-color: #0099dd;
     color: #eee;
-}
-
-.machine td{
-    border: 0px;
 }
 
 @media screen and (max-width: 1000px) {

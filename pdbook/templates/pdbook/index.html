@@ -51,42 +51,38 @@
     <selector>
       <!-- SELECTOR FOR MACHINES -->
       {% if machine_list %}
-        <table class="machine">
-          <tr>
-            {% for machine in machine_list %}
-              {% if machine == selected_machine %}
-                <td>
+        <ul class="machine">
+          {% for machine in machine_list %}
+            {% if machine == selected_machine %}
+              <li>
                   <a class="selected" href="{% url 'machine' machine.name %}" title="{{machine.description}}">{{ machine.visible_name|safe }}</a>
-                </td>
-              {% else %}
-                <td>
-                  <a class="unselected" href="{% url 'machine' machine.name %}" title="{{machine.description}}">{{ machine.visible_name|safe }}</a>
-                </td>
-              {% endif %}
-            {% endfor %}
-          </tr>
-        </table>
+              </li>
+            {% else %}
+              <li>
+                <a class="unselected" href="{% url 'machine' machine.name %}" title="{{machine.description}}">{{ machine.visible_name|safe }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
       {% else %}
         <p style="text-align: center">No machines have been added</p>
       {% endif %}
       <!-- END SELECTOR FOR MACHINES -->
       <!-- SELECTOR FOR BEAMS -->
       {% if beam_list %} 
-        <table class="beam">
-          <tr>
-            {% for beam in beam_list %}
-              {% if beam == selected_beam %}
-                <td>
-                  <a class="selected" href="{% url 'beam' selected_machine.name beam.name %}">{{beam.visible_name|safe }}</a>
-                </td>
-              {% else %}
-                <td>
-                  <a class="unselected" href="{% url 'beam' selected_machine.name beam.name %}">{{ beam.visible_name|safe }}</a>
-                </td>
-              {% endif %}
-            {% endfor %}
-          </tr>
-        </table>
+        <ul class="beam">
+          {% for beam in beam_list %}
+            {% if beam == selected_beam %}
+              <li>
+                <a class="selected" href="{% url 'beam' selected_machine.name beam.name %}">{{beam.visible_name|safe }}</a>
+              </li>
+            {% else %}
+              <li>
+                <a class="unselected" href="{% url 'beam' selected_machine.name beam.name %}">{{ beam.visible_name|safe }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
       {% else %}
         {% if selected_machine %}
           <p style="text-align: center">No beams have been added for the selected machine</p>
@@ -95,21 +91,19 @@
       <!-- END SELECTOR FOR BEAM -->
       <!-- SELECTOR FOR DATA -->
       {% if data_list %}
-        <table class="data">
-          <tr>
-            {% for data in data_list %}
-              {% if data == selected_data %}
-                <td>
-                  <a class="selected" title="{{data.data_about}}" href="{% url 'data' selected_machine.name selected_beam.name data.name %}">{{ data.visible_name|safe }}</a>
-                </td>
-              {% else %}
-                <td>
-                  <a class="unselected" title="{{data.data_about}}" href="{% url 'data' selected_machine.name selected_beam.name data.name %}">{{ data.visible_name|safe }}</a>
-                </td>
-              {% endif %}
-            {% endfor %}
-          </tr>
-        </table>
+        <ul class="data">
+          {% for data in data_list %}
+            {% if data == selected_data %}
+              <li>
+                <a class="selected" title="{{data.data_about}}" href="{% url 'data' selected_machine.name selected_beam.name data.name %}">{{ data.visible_name|safe }}</a>
+              </li>
+            {% else %}
+              <li>
+                <a class="unselected" title="{{data.data_about}}" href="{% url 'data' selected_machine.name selected_beam.name data.name %}">{{ data.visible_name|safe }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
       {% else %}
         {% if selected_beam %}
           <p style="text-align: center">No data has been added for the selected beam</p>
@@ -122,8 +116,10 @@
           <!-- START OF DATA TABLE -->
           <div class="tablesaw-wrapper">
             <div class="table-btn">
-              {% if selected_data.has_interpolation %}
-                <a rel="leanModal" href='#modal-interpolate'>Interpolate</a>
+              {% if selected_data.interpolation_type == '1D' %}
+                <a rel="leanModal" href='#modal-interpolate-1D'>Interpolate</a>
+              {% elif selected_data.interpolation_type == '2D' %}
+                <a rel="leanModal" href='#modal-interpolate-2D'>Interpolate</a>
               {% endif %}
               <a rel="leanModal" href='#modal-info'>Info</a>
             </div>
@@ -155,7 +151,7 @@
           <!-- END OF DATA TABLE -->
       {% endif %}
     </data_table>
-    <div id="modal-interpolate">
+    <div id="modal-interpolate-2D">
       {% if selected_data %}
       <form method='post' id='interpolation-form-2D'>
         {% csrf_token %}
@@ -177,13 +173,13 @@
               <td id="tr"></td>
             </tr>
             <tr>
-              <td><input id="input-input" type="text"></td>
+              <td><input id="y-input" type="text"></td>
               <td id="cl"></td>
               <td id="interp-result"></td>
               <td id="cr"></td>
             </tr>
             <tr>
-              <td class="y-near" id="y-b"></td>
+              <td class="input-near" id="y-b"></td>
               <td id="bl"></td>
               <td id="bc"></td>
               <td id="br"></td>

@@ -38,7 +38,7 @@
     display: none;
 }
 
-#modal-interpolate {
+#modal-interpolate-2D {
     width: 500px;
     top: 40% !important;
     display: none;
@@ -83,21 +83,23 @@
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 15px;
     line-height: 20px;
-    width: 100%;
+    width: 80%;
     margin-top: 20px;
-}
-
-.interpolation-table {
     margin-left: auto;
     margin-right: auto;
 }
 
+.interpolation-table {
+    width: 100%;
+    table-layout: fixed;
+    /*margin-left: auto;
+    margin-right: auto;*/
+}
+
 .input-near {
-    width: 70px;
     height: 18px;
     background: #fff;
     color: #aaa;
-    outline: none;
     border: 1px solid #ccc;
     text-align: center;
     padding: 0;
@@ -105,18 +107,18 @@
 
 #x-input,
 #y-input {
-    width: 70px;
     height: 20px;
+    width: 100%;
     background: #fff;
     color: #000;
     outline: none;
     border: 1px solid #0099dd;
     text-align: center;
     padding: 0px;
+    margin-left: -1px;
 }
 
 #interp-result {
-    width: 70px;
     height: 20px;
     background: #0099dd;
     color: #eee !important;
@@ -126,13 +128,16 @@
 }
 
 #tc, #cl, #cr, #bc {
-    width: 70px;
     height: 20px;
     background: #d3eefb;
     outline: none;
     border: 1px solid #d3eefb;
     text-align: center;
     color: #666 !important;
+}
+
+#tl, #tr, #bl, #br {
+    /*width: 100%;*/
 }
 
 .interp-btn {

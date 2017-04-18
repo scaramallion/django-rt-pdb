@@ -1,7 +1,9 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.files.storage import DefaultStorage, FileSystemStorage
 from django.db import models
 from django.utils import timezone
+from django.utils.html import format_html, mark_safe
 
 import os
 
@@ -97,6 +99,18 @@ class Beam(models.Model):
         s = "{2} - {0} - ({1})".format(self.visible_name, self.description, self.machine.visible_name)
         return s
 
+    def validate_unique(self, exclude=None):
+        """All Beam objects for a given Machine must have a unique `name`."""
+        # Get a list of all the Data objects for the current Beam
+        beams = Beam.objects.filter(machine=self.machine)
+        beam_names = [b.name for b in beams]
+
+        if self.name in beam_names and self not in beams:
+            raise ValidationError("A Beam entry with the name '{}' already "
+                                  "exists for the current Machine."
+                                  .format(self.name))
+        
+        return super(Beam, self).validate_unique(exclude)
 
 class OverwriteStorage(FileSystemStorage):
     """Override the FileSystemStorage class to overwrite existing files."""
@@ -163,26 +177,34 @@ class Data(models.Model):
     data = models.FileField(upload_to=objects._upload_directory_path,
                             storage=OverwriteStorage())
     data_source = models.CharField(max_length=100, blank=True)
-    description = models.CharField(max_length=100, blank=True)
-    has_interpolation = models.BooleanField(default=False)
+    description = models.CharField(max_length=200, blank=True)
+    interpolation_type = models.CharField(default='NA',
+                                          max_length=3,
+                                          choices=(('NA', 'No interpolation'),
+                                                   ('1D', '1D interpolation'),
+                                                   ('2D', '2D interpolation')))
     interp1D_indexes = models.CharField(max_length=100, blank=True)
     name = models.CharField(max_length=100)
     visible_name = models.CharField(max_length=100)
 
-    def __init__(self, *args, **kwargs):
-        super(Data, self).__init__(*args, **kwargs)
-        # I don't think these get stored
-        self.x_headers = None
-        self.x_values = None
-        self.x_format = None
-        self.y_headers = None
-        self.y_values = None
-        self.y_format = None
-        self.xy_data = None
-        self.xy_format = None
-    
     def __str__(self):
         """Return a str representation of the Data."""
-        s = '{0}'.format(self.visible_name)
-        return s
+        return self.html_visible_name()
 
+    def html_visible_name(self):
+        """Return a non-escaped `visible_name`."""
+        return format_html('{}', mark_safe(self.visible_name))
+
+    def validate_unique(self, exclude=None):
+        """All Data objects for a given Beam must have a unique `name`."""
+        # Get a list of all the Data objects for the current Beam
+        data = Data.objects.filter(beam=self.beam)
+        data_names = [d.name for d in data]
+
+        if self.name in data_names and self not in data:
+            raise ValidationError("A Data entry with the name '{}' already "
+                                  "exists for the current Beam."
+                                  .format(self.name))
+        
+        return super(Data, self).validate_unique(exclude)
+        

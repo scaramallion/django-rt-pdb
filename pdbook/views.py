@@ -86,10 +86,10 @@ def get_data(request, machine_name, beam_name, data_name):
     d = Data.objects.filter(beam=b).filter(name=data_name)[0]
 
     # Parse the data
-    try:
-        table_data = _read_data_file(d)
-    except:
-        print('Error reading data file')
+    #try:
+    table_data = _read_data_file(d)
+    #except:
+    #    print('Error reading data file')
 
     # Build response
     context = {}
@@ -187,6 +187,7 @@ def _read_data_file(data):
     y_title = ''
     y_values = None
     y_format = '{}'
+    y_labels = None
     xy_values = []
     xy_format = '{}'
 
@@ -214,6 +215,8 @@ def _read_data_file(data):
                         x_title = values[0]
                     elif line_type == 'XY_FORMAT':
                         xy_format = values[0]
+                    elif line_type == 'Y_HEADERS':
+                        y_labels = values
                     elif line_type == 'Y_VALUES':
                         y_values = [float(val) for val in values]
                     elif line_type == 'Y_FORMAT':
@@ -227,8 +230,17 @@ def _read_data_file(data):
     for row in xy_values:
         values_out.append([xy_format.format(val) for val in row])
 
-    for data_row, first_row in zip(values_out, y_values):
-        data_row.insert(0, y_format.format(first_row))
+    if x_values is None:
+        # If there are no x values then assume 1D table
+        for data_row, label in zip(values_out, y_labels):
+            data_row.insert(0, label)
+    else:
+        # 2D table
+        for data_row, first_row in zip(values_out, y_values):
+            data_row.insert(0, y_format.format(first_row))
+
+    if header_labels is None:
+        header_labels = [x_format.format(val) for val in x_values]
 
     return {'header_labels' : header_labels,
              'table_data' : values_out,
