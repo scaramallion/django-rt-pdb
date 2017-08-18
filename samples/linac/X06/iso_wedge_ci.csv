@@ -1,0 +1,35 @@
+# 6 MV Isocentric Calibration Factor - Wedge
+
+# Metadata
+# M(field size, depth, SAD, wedge/open)
+DESCRIPTION=M(y, 10 cm, 90 cm, wedge)/M(10, d_max, 100 cm, open)
+SOURCE=Planning Data Book (28-04-2016)
+
+X_TITLE=Wedge Isocentric Calibration Factor
+X_HEADERS=Field Size X by Y<br/>(cm),Wedge C<sub>i</sub>
+X_FORMAT=
+X_VALUES=
+
+# Equivalent field size (cm^2)
+Y_TITLE=Eq. Field Size</br>(cm<sup>2</sup>)
+Y_HEADERS=2.0 x 2.0,3.0 x 3.0,4.0 x 4.0,5.0 x 5.0,6.0 x 6.0,7.0 x 7.0,8.0 x 8.0,10.0 x 10.0,12.0 x 12.0, 15.0 x 15.0,20.0 x 20.0,25.0 x 25.0,30.0 x 30.0,40.0 x 30.0
+Y_FORMAT={:.1f}
+Y_VALUES=2,3,4,5,6,7,8,10,12,15,20,25,30,34.0
+
+# Table data
+XY_FORMAT={:.3f}
+XY_TYPE=NUMERIC
+0.164
+0.172
+0.179
+0.186
+0.192
+0.198
+0.203
+0.212
+0.219
+0.228
+0.239
+0.246
+0.252
+0.254
