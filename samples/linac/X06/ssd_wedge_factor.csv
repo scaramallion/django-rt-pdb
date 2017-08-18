@@ -1,12 +1,23 @@
-# Equivalent field size in (cm^2)
-X_HEADERS=Field Size X by Y (cm),<sup>W</sup>MWF
+# 6 MV Wedge Factors
 
-# Depth in water in (cm)
+# Metadata
+# M(field size, wedge/open) at 100 cm SSD, d<sub>max</sub>, 10 x 10 field
+DESCRIPTION=M(field size, item)/M(field size, open) at 100 cm SSD, d<sub>max</sub>
+SOURCE=Planning Data Book (28-04-2016)
+
+X_TITLE=
+X_HEADERS=Field Size X by Y (cm),Wedge Factor
+X_FORMAT=
+X_VALUES=
+
+Y_TITLE=Eq. Field Size (cm<sup>2</sup>)
 Y_HEADERS=2.0 x 2.0,3.0 x 3.0,4.0 x 4.0,5.0 x 5.0,6.0 x 6.0,7.0 x 7.0,8.0 x 8.0,10.0 x 10.0,12.0 x 12.0,15.0 x 15.0,20.0 x 20.0,25.0 x 25.0,30.0 x 30.0,40.0 x 30.0
 Y_FORMAT={:.1f}
 Y_VALUES=2,3,4,5,6,7,8,10,12,15,20,25,30,34
 
+# Table data
 XY_FORMAT={:.3f}
+XY_TYPE=NUMERIC
 0.242
 0.242
 0.243

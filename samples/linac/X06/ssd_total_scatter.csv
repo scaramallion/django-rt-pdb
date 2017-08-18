@@ -1,17 +1,25 @@
+# 6 MV Total Scatter Factors
+
+# Metadata
+# M(field size) at 100 cm SSD, d<sub>max</sub>
+DESCRIPTION=M(field size)/M(10) at 100 cm SSD
+SOURCE=Planning Data Book (28-04-2016)
+
 # X field size in (cm)
 X_HEADERS=Field Size<br />(cm),2.0X,3.0X,4.0X,6.0X,8.0X,10.0X,12.0X,15.0X,20.0X,25.0X,30.0X,35.0X,40.0X
 X_TITLE=X Field Size (cm)
-X_VALUES=2.0,3.0,4.0,6.0,8.0,10.0,12.0,15.0,20.0,25.0,30.0,35.0,40.0
 X_FORMAT={:.1f}
+X_VALUES=2.0,3.0,4.0,6.0,8.0,10.0,12.0,15.0,20.0,25.0,30.0,35.0,40.0
 
 # Y field size in (cm)
 Y_TITLE=Y Field Size (cm)
 Y_HEADERS=
-Y_VALUES=2.0,3.0,4.0,6.0,8.0,10.0,12.0,15.0,20.0,25.0,30.0,35.0,40.0
 Y_FORMAT={:.1f}Y
+Y_VALUES=2.0,3.0,4.0,6.0,8.0,10.0,12.0,15.0,20.0,25.0,30.0,35.0,40.0
 
-# Reading(field size, depth of maximum dose) / reading(10x10, depth of maximum dose)
+# Table data
 XY_FORMAT={:.3f}
+XY_TYPE=NUMERIC
 0.893,0.902,0.908,0.915,0.919,0.921,0.922,0.923,0.924,0.924,0.925,0.925,0.926
 0.902,0.919,0.928,0.939,0.945,0.949,0.951,0.952,0.952,0.952,0.954,0.956,0.951
 0.914,0.929,0.938,0.948,0.954,0.959,0.962,0.964,0.966,0.966,0.967,0.968,0.963

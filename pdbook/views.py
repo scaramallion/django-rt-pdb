@@ -201,7 +201,7 @@ def _parse_csv_line(line):
     """
     variables = ['X_TITLE', 'X_HEADERS', 'X_VALUES', 'X_FORMAT',
                  'Y_TITLE', 'Y_HEADERS', 'Y_VALUES', 'Y_FORMAT',
-                 'XY_FORMAT']
+                 'XY_FORMAT', 'XY_TYPE', 'DESCRIPTION', 'SOURCE']
 
     csv_data = line.split(',')
     
@@ -314,7 +314,8 @@ def _read_data_file(data_obj):
 
     data = {'X_TITLE' : '', 'X_HEADERS' : '', 'X_FORMAT' : '{}', 'X_VALUES' : [],
             'Y_TITLE' : '', 'Y_HEADERS' : '', 'Y_FORMAT' : '{}', 'Y_VALUES' : [],
-            'XY_FORMAT' : '{}', 'XY_VALUES' : []}
+            'XY_FORMAT' : '{}', 'XY_VALUES' : [], 'XY_TYPE' : ['NUMERIC'],
+            'DESCRIPTION' : '', 'SOURCE' : ''}
 
     with open(data_obj.data.path, 'r') as f:
         contents = f.readlines()
@@ -330,12 +331,13 @@ def _read_data_file(data_obj):
                 try:
                     var_name, var_values = _parse_csv_line(line)
                 except ValueError:
-                    # TODO
-                    # Create page with error - unknown variable name
-                    pass
+                    msg = 'Unable to parse the file'
+                    return msg
 
                 if (var_name, var_values) == (None, None):
-                    data['XY_VALUES'].append([float(val) for val in line_list])
+                    if data['XY_TYPE'][0].upper() == 'NUMERIC':
+                        line_list[:] = [float(val) for val in line_list]
+                    data['XY_VALUES'].append(line_list)
                 else:
                     data[var_name] = var_values
 
@@ -367,13 +369,16 @@ def _read_data_file(data_obj):
         msg = 'The file must have either non-blank Y_HEADERS or Y_VALUES values'
         return msg
 
-    if data['XY_VALUES'] != []:
+    #print(data['XY_VALUES'])
+    if data['XY_VALUES'] != [] and data['XY_TYPE'][0].upper() == 'NUMERIC':
         # Apply the XY format to the table data
         values_out = []
         for xy_row, y_val in zip(data['XY_VALUES'], row_labels):
             new_row = [data['XY_FORMAT'][0].format(xy) for xy in xy_row]
             new_row.insert(0, y_val)
             values_out.append(new_row)
+    elif data['XY_VALUES'] != []:
+        values_out = data['XY_VALUES']
     else:
         msg = 'The file has no tabular data'
         return msg

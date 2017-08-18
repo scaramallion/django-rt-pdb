@@ -1,0 +1,38 @@
+# 6 MeV Electron Standard Cutout Factors
+
+# Metadata
+DESCRIPTION=M(fs, d, cutout)/M(fs, d<sub>max</sub>, open) at 100 cm SSD
+SOURCE=Planning Data Book (28-04-2016)
+
+#
+X_TITLE=
+X_HEADERS=Label, Shape, Approx. Size, Applicator, OF (dmax of 10x10)
+X_FORMAT=
+X_VALUES=
+
+# Cutout
+Y_TITLE=Electron Cutout
+Y_HEADERS=none
+Y_FORMAT=
+Y_VALUES=
+
+# Table data
+XY_FORMAT={:s}
+XY_TYPE=VERBATIM
+A,   Oval,    5 x 8, 10 x 10,  0.977
+C,   Oval,    6 x 9, 10 x 10,  0.986
+D, Kidney,    4 x 9, 10 x 10,  0.973
+J,   Oval,  7 x 8.5, 10 x 10,  0.989
+K,   Oval,    9 x 5, 10 x 10,  0.985
+L,   Oval,    7 x 5, 10 x 10,  0.966
+M, Circle,    5.5 D, 10 x 10,  0.955
+N, Circle,      6 D, 10 x 10,  0.987
+P, Circle,      7 D, 10 x 10,  1.000
+E,   Oval,   7 x 10, 14 x 14,  1.025
+F, Kidney,   5 x 10, 14 x 14,  1.018
+G,   Oval,   8 x 12, 14 x 14,  1.028
+H, Kidney, 6.5 x 12, 14 x 14,  1.020
+I,   Oval,   9 x 13, 14 x 14,  1.030
+Q, Circle,     10 D, 14 x 14,  1.038
+R,   Oval,   8 x 16, 14 x 14,  1.033
+
