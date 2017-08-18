@@ -9,6 +9,9 @@ from pdbook.models import Machine, Beam, Data
 
 
 def index(request):
+    """Return a page with a list of available Machines"""
+    #m = get_object_or_404(Machine, slug=slug)
+    
     # Get all machines
     machine_list = _get_machines()
 
@@ -19,12 +22,14 @@ def index(request):
 
     return render(request, 'pdbook/index.html', context)
 
-def get_machine(request, machine_name):
+def get_machine(request, machine_slug):
+    """Return a page with a list of available Beams for the selected Machine."""
     # Get all machines
     machine_list = _get_machines()
 
     # Get selected machine
-    m = Machine.objects.filter(name=machine_name)[0]
+    # FIXME: use id instead
+    m = Machine.objects.get(slug=machine_slug)
 
     # Get all beams for the selected machine
     beam_list = _get_beams(m)
@@ -38,18 +43,19 @@ def get_machine(request, machine_name):
 
     return render(request, 'pdbook/index.html', context)
 
-def get_beam(request, machine_name, beam_name):
+def get_beam(request, machine_slug, beam_slug):
+    """Return a page with a list of available Data for the selected Beam."""
     # Get all machines
     machine_list = _get_machines()
 
     # Get selected machine
-    m = Machine.objects.filter(name=machine_name)[0]
+    m = Machine.objects.get(slug=machine_slug)
 
     # Get all beams for the selected machine
     beam_list = _get_beams(m)
 
     # Get the selected beam
-    b = Beam.objects.filter(name=beam_name)[0]
+    b = Beam.objects.get(slug=beam_slug, machine=m)
 
     # Get all data for the selected beam
     data_list = _get_data(b)
@@ -65,64 +71,75 @@ def get_beam(request, machine_name, beam_name):
 
     return render(request, 'pdbook/index.html', context)
 
-@csrf_protect
-def get_data(request, machine_name, beam_name, data_name):
+def get_data(request, machine_slug, beam_slug, data_slug):
+    """Return a page with the table data for the selected Data."""
     # Get all machines
     machine_list = _get_machines()
 
     # Get selected machine
-    m = Machine.objects.filter(name=machine_name)[0]
+    m = Machine.objects.get(slug=machine_slug)
 
     # Get all beams for the selected machine
     beam_list = _get_beams(m)
 
     # Get the selected beam
-    b = Beam.objects.filter(name=beam_name)[0]
+    b = Beam.objects.get(slug=beam_slug, machine=m)
 
     # Get all data for the selected beam
     data_list = _get_data(b)
 
     # Get the selected data
-    d = Data.objects.filter(beam=b).filter(name=data_name)[0]
+    d = Data.objects.get(slug=data_slug, beam=b)
 
     # Parse the data
     #try:
     table_data = _read_data_file(d)
     #except:
     #    print('Error reading data file')
+    if isinstance(table_data, str):
+        context = {}
+        if beam_list:
+            context = {'machine_list' : machine_list,
+                       'beam_list' : beam_list,
+                       'data_list' : data_list,
+                       'selected_machine' : m,
+                       'selected_beam' : b,
+                       'selected_data' : d,
+                       'error_message' : table_data}
+        response = render(request, 'pdbook/index.html', context)
+    else:
+        context = {}
+        if beam_list:
+            context = {'machine_list' : machine_list,
+                       'beam_list' : beam_list,
+                       'data_list' : data_list,
+                       'selected_machine' : m,
+                       'selected_beam' : b,
+                       'selected_data' : d}
+        if table_data:
+            context.update(table_data)
+        response = render(request, 'pdbook/index.html', context)
 
-    # Build response
-    context = {}
-    if beam_list:
-        context = {'machine_list' : machine_list,
-                   'beam_list' : beam_list,
-                   'data_list' : data_list,
-                   'selected_machine' : m,
-                   'selected_beam' : b,
-                   'selected_data' : d}
-    if table_data:
-        context.update(table_data)
+    return response
 
-    return render(request, 'pdbook/index.html', context)
-
-def interpolate(request, machine_name, beam_name, data_name):
+def interpolate(request, machine_slug, beam_slug, data_slug):
     # Get all machines
-    machine_list = _get_machines()
+    #machine_list = _get_machines()
 
     # Get selected machine
-    m = Machine.objects.filter(name=machine_name)[0]
+    m = Machine.objects.get(slug=machine_slug)
 
     # Get all beams for the selected machine
-    beam_list = _get_beams(m)
+    #beam_list = _get_beams(m)
 
     # Get the selected beam
-    b = Beam.objects.filter(name=beam_name)[0]
+    b = Beam.objects.get(slug=beam_slug, machine=m)
 
     # Get all data for the selected beam
-    data_list = _get_data(b)
+    #data_list = _get_data(b)
 
     # Get the selected data
-    d = Data.objects.filter(beam=b).filter(name=data_name)[0]
+    d = Data.objects.get(slug=data_slug, beam=b)
 
     data = _read_data_file(d)
 
@@ -154,7 +171,7 @@ def _get_beams(machine):
     -------
     list of FIXME
     """
-    return Beam.objects.filter(machine=machine).order_by('-name')[:].reverse
+    return Beam.objects.filter(machine=machine).order_by('modality', '-name')[:].reverse
 
 def _get_data(beam):
     """
@@ -168,8 +185,122 @@ def _get_data(beam):
     """
     return Data.objects.filter(beam=beam).order_by('-name')[:].reverse
 
-def _read_data_file(data):
+def _parse_csv_line(line):
+    """
+    Parameters
+    ----------
+    line : str
+        A non-empty line from the CSV data file with starting and ending white
+        space stripped out.
+
+    Returns
+    -------
+    str, list of str or None
+        The variable name, and list of variable values. If the line contains
+        no variable then returns None.
+    """
+    variables = ['X_TITLE', 'X_HEADERS', 'X_VALUES', 'X_FORMAT',
+                 'Y_TITLE', 'Y_HEADERS', 'Y_VALUES', 'Y_FORMAT',
+                 'XY_FORMAT']
+
+    csv_data = line.split(',')
+    
+    # Variables
+    if '=' in csv_data[0]:
+        variable_name = csv_data[0].split('=')[0].strip()
+        variable_values = [csv_data[0].split('=')[1].strip()]
+
+        if variable_name not in variables:
+            raise ValueError('The CSV data file contains an unknown variable.')
+
+        if csv_data[1:]:
+            variable_values.extend(csv_data[1:])
+
+        return variable_name, variable_values
+
+    return None, None
+
+def _read_data_file(data_obj):
     """Parse the uploaded data file for the contents
+
+    Comments
+    --------
+    The hash character, #, is used to denote comments.
+
+    Data File Variables
+    -------------------
+    X_TITLE
+    ~~~~~~~
+    Required if 2D. Character string, may include HTML tags. One value allowed.
+    The title of the x variable data for f(x, y). Examples:
+        X_TITLE=Equivalent Field Size (cm)
+    
+    X_LABELS
+    ~~~~~~~~
+    Optional. Character strings, may include HTML tags. One label for each
+    column of data. The column labels in the table header.
+        X_LABELS=10X<br />10Y,20X<br />20Y,30X<br />30Y,40X<br />40Y
+        X_LABELS=Field Size (cm),Scatter Factor
+        X_LABELS=
+    
+    X_VALUES
+    ~~~~~~~~
+    Required if 2D. Numeric strings, may not include HTML tags. One value for each column of
+    data. The x variable data for f(x, y). Will be converted to floats.
+        X_VALUES=10.0,20.0,30.0,40.0
+    
+    X_FORMAT
+    ~~~~~~~~
+    If X_LABELS is blank then the X_VALUES will be converted to a string using
+    new style python string formatting. If a single format is supplied then
+    that format will apply to all the X_VALUES:
+        X_FORMATS={:.2f} # Display float values numeric strings with 2 decimal places
+    If multiple values are supplied then the format will be applied to the
+    corresponding X_VALUES value:
+        X_FORMATS={:.2f},{:.3f},{:.1f} (cm),{:.2f} # 10.00, 20.000, 30.0 (cm), 40.00
+
+    Y_TITLE
+    ~~~~~~~
+    Required. Character string, may include HTML tags. One value allowed.
+    The title of the y variable data for f(x, y) and f(y). Examples:
+        Y_TITLE=Depth (cm)
+        
+    Y_LABELS
+    ~~~~~~~~~
+    Optional. Character strings, may include HTML tags. One label for each
+    row of data. The row labels in the table header.
+        Y_LABELS=10X<br />10Y,20X<br />20Y,30X<br />30Y,40X<br />40Y
+        Y_LABELS=Field Size (cm),Scatter Factor
+        Y_LABELS=
+    
+    Y_VALUES
+    ~~~~~~~~
+    Required. Numeric strings, may not include HTML tags. One value for each row of
+    data. The y variable data for f(x, y) and f(y). Will be converted to floats.
+        Y_VALUES=1.0,2.0,5.0
+    
+    Y_FORMAT
+    ~~~~~~~~
+    If Y_LABELS is blank then the Y_VALUES will be converted to a string using
+    new style python string formatting. If a single format is supplied then
+    that format will apply to all the Y_VALUES:
+        Y_FORMAT={:.2f} # Display float values numeric strings with 2 decimal places
+
+    If multiple values are supplied then the format will be applied to the
+    corresponding Y_VALUES value:
+        Y_FORMAT={:.2f},{:.1f},{:.3f} (cm) # 1.00, 5.0 (cm), 2.000, 2.101, ...
+    
+    XY_FORMAT
+    ~~~~~~~~~
+    The values of the 1D/2D data will be converted to a string using
+    new style python string formatting. If a single format is supplied then
+    that format will apply to all the f(x, y) and f(y) values:
+        XY_FORMAT={:.3f} # Display float values numeric strings with 3 decimal places
+
+    If multiple values are supplied then the format will be applied to the
+    corresponding column of the table data:
+        XY_FORMAT={:.1f},{:.3f} # 1.0, 2.002, 2.004, 2.008, ...
+                                # 1.5, 2.123, 2.140, 2.180, ...
 
     Parameters
     ----------
@@ -180,18 +311,12 @@ def _read_data_file(data):
     dict
         A dict containing the table data
     """
-    header_labels = None
-    x_title = ''
-    x_values = None
-    x_format = '{}'
-    y_title = ''
-    y_values = None
-    y_format = '{}'
-    y_labels = None
-    xy_values = []
-    xy_format = '{}'
 
-    with open(data.data.path, 'r') as f:
+    data = {'X_TITLE' : '', 'X_HEADERS' : '', 'X_FORMAT' : '{}', 'X_VALUES' : [],
+            'Y_TITLE' : '', 'Y_HEADERS' : '', 'Y_FORMAT' : '{}', 'Y_VALUES' : [],
+            'XY_FORMAT' : '{}', 'XY_VALUES' : []}
+
+    with open(data_obj.data.path, 'r') as f:
         contents = f.readlines()
         for line in contents:
             # Strip out any comments
@@ -201,53 +326,64 @@ def _read_data_file(data):
             line = line.strip()
             if line != '':
                 line_list = line.split(',')
-                if '=' in line_list[0]:
-                    line_type = line_list[0].split('=')[0].strip()
-                    values = [line_list[0].split('=')[1]]
-                    values.extend(line_list[1:])
-                    if line_type == 'X_HEADERS':
-                        header_labels = values
-                    elif line_type == 'X_VALUES':
-                        x_values = [float(val) for val in values]
-                    elif line_type == 'X_FORMAT':
-                        x_format = values[0]
-                    elif line_type == 'X_TITLE':
-                        x_title = values[0]
-                    elif line_type == 'XY_FORMAT':
-                        xy_format = values[0]
-                    elif line_type == 'Y_HEADERS':
-                        y_labels = values
-                    elif line_type == 'Y_VALUES':
-                        y_values = [float(val) for val in values]
-                    elif line_type == 'Y_FORMAT':
-                        y_format = values[0]
-                    elif line_type == 'Y_TITLE':
-                        y_title = values[0]
+
+                try:
+                    var_name, var_values = _parse_csv_line(line)
+                except ValueError:
+                    # TODO
+                    # Create page with error - unknown variable name
+                    pass
+
+                if (var_name, var_values) == (None, None):
+                    data['XY_VALUES'].append([float(val) for val in line_list])
                 else:
-                    xy_values.append([float(val) for val in line_list])
+                    data[var_name] = var_values
 
-    values_out = []
-    for row in xy_values:
-        values_out.append([xy_format.format(val) for val in row])
-
-    if x_values is None:
-        # If there are no x values then assume 1D table
-        for data_row, label in zip(values_out, y_labels):
-            data_row.insert(0, label)
+    if data['X_TITLE']:
+        x_title = data['X_TITLE'][0]
     else:
-        # 2D table
-        for data_row, first_row in zip(values_out, y_values):
-            data_row.insert(0, y_format.format(first_row))
+        x_title = ''
 
-    if header_labels is None:
-        header_labels = [x_format.format(val) for val in x_values]
+    if data['Y_TITLE']:
+        y_title = data['Y_TITLE'][0]
+    else:
+        y_title = ''
 
-    return {'header_labels' : header_labels,
+    # Get the column labels, formatting if necessary
+    if data['X_HEADERS'] != ['']:
+        column_labels = data['X_HEADERS']
+    elif data['X_VALUES'] != ['']:
+        column_labels = [data['X_FORMAT'][0].format(float(val)) for val in data['X_VALUES']]
+    else:
+        msg = 'The file must have either non-blank X_HEADERS or X_VALUES values'
+        return msg
+
+    # Get the row labels, formatting if necessary
+    if data['Y_HEADERS'] != ['']:
+        row_labels = data['Y_HEADERS']
+    elif data['Y_VALUES'] != ['']:
+        row_labels = [data['Y_FORMAT'][0].format(float(val)) for val in data['Y_VALUES']]
+    else:
+        msg = 'The file must have either non-blank Y_HEADERS or Y_VALUES values'
+        return msg
+
+    if data['XY_VALUES'] != []:
+        # Apply the XY format to the table data
+        values_out = []
+        for xy_row, y_val in zip(data['XY_VALUES'], row_labels):
+            new_row = [data['XY_FORMAT'][0].format(xy) for xy in xy_row]
+            new_row.insert(0, y_val)
+            values_out.append(new_row)
+    else:
+        msg = 'The file has no tabular data'
+        return msg
+
+    return {'column_labels' : column_labels,
              'table_data' : values_out,
              'x_title' : x_title,
-             'x_values' : x_values,
+             'x_values' : data['X_VALUES'],
              'y_title' : y_title,
-             'y_values' : y_values}
+             'y_values' : data['Y_VALUES']}
 
 def _do_interpolate(interpolation_type, x, y, data):
     x_value_ok = True

@@ -55,11 +55,11 @@
           {% for machine in machine_list %}
             {% if machine == selected_machine %}
               <li>
-                  <a class="selected" href="{% url 'machine' machine.name %}" title="{{machine.description}}">{{ machine.visible_name|safe }}</a>
+                  <a class="selected" href="{{ machine.get_absolute_url }}" title="{{machine.description}}">{{ machine.visible_name|safe }}</a>
               </li>
             {% else %}
               <li>
-                <a class="unselected" href="{% url 'machine' machine.name %}" title="{{machine.description}}">{{ machine.visible_name|safe }}</a>
+                <a class="unselected" href="{{ machine.get_absolute_url }}" title="{{machine.description}}">{{ machine.visible_name|safe }}</a>
               </li>
             {% endif %}
           {% endfor %}
@@ -74,11 +74,11 @@
           {% for beam in beam_list %}
             {% if beam == selected_beam %}
               <li>
-                <a class="selected" href="{% url 'beam' selected_machine.name beam.name %}">{{beam.visible_name|safe }}</a>
+                <a class="selected" href="{{ beam.get_absolute_url }}">{{beam.visible_name|safe }}</a>
               </li>
             {% else %}
               <li>
-                <a class="unselected" href="{% url 'beam' selected_machine.name beam.name %}">{{ beam.visible_name|safe }}</a>
+                <a class="unselected" href="{{ beam.get_absolute_url }}">{{ beam.visible_name|safe }}</a>
               </li>
             {% endif %}
           {% endfor %}
@@ -95,11 +95,11 @@
           {% for data in data_list %}
             {% if data == selected_data %}
               <li>
-                <a class="selected" title="{{data.data_about}}" href="{% url 'data' selected_machine.name selected_beam.name data.name %}">{{ data.visible_name|safe }}</a>
+                <a class="selected" title="{{data.data_about}}" href="{{ data.get_absolute_url }}">{{ data.visible_name|safe }}</a>
               </li>
             {% else %}
               <li>
-                <a class="unselected" title="{{data.data_about}}" href="{% url 'data' selected_machine.name selected_beam.name data.name %}">{{ data.visible_name|safe }}</a>
+                <a class="unselected" title="{{data.data_about}}" href="{{ data.get_absolute_url }}">{{ data.visible_name|safe }}</a>
               </li>
             {% endif %}
           {% endfor %}
@@ -113,6 +113,7 @@
     </selector>
     <data_table>
       {% if selected_data %}
+        {% if column_labels %}
           <!-- START OF DATA TABLE -->
           <div class="tablesaw-wrapper">
             <div class="table-btn">
@@ -127,7 +128,7 @@
               <!-- TABLE HEADER -->
               <thead>
                 <tr>
-                  {% for label in header_labels %}
+                  {% for label in column_labels %}
                     {% if forloop.first %}
                       <th class="tablesaw-cell-persist" data-tablesaw-priority="persist">{{ label|safe }}</th>
                     {% else %}
@@ -149,6 +150,9 @@
             </table>
           </div>
           <!-- END OF DATA TABLE -->
+        {% else %}
+          <p style="text-align: center">The CSV file for the selected data is invalid: {{ error_message }}</p>
+        {% endif %}
       {% endif %}
     </data_table>
     <div id="modal-interpolate-2D">
@@ -183,6 +187,36 @@
               <td id="bl"></td>
               <td id="bc"></td>
               <td id="br"></td>
+            </tr>
+          </table>
+        </div>
+        <div class="interp-btn">
+          <button type="submit" id="calculate">Calculate</button>
+        </div>
+      </form>
+      {% endif %}
+    </div>
+    <div id="modal-interpolate-1D">
+      {% if selected_data %}
+      <form method='post' id='interpolation-form-1D'>
+        {% csrf_token %}
+        <div class="interpolation-container">
+          <table class="interpolation-table">
+            <tr>
+              <td style="color: #666 !important;">{{ y_title|safe }}</td>
+              <td style="color: #666 !important;">{{ x_title|safe }}</td>
+            </tr>
+            <tr>
+              <td class="input-near" id="y-a"></td>
+              <td id="tl"></td>
+            </tr>
+            <tr>
+              <td><input id="y-input" type="text"></td>
+              <td id="interp-result"></td>
+            </tr>
+            <tr>
+              <td class="input-near" id="y-b"></td>
+              <td id="bl"></td>
             </tr>
           </table>
         </div>

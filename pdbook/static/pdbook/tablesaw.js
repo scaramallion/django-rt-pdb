@@ -1351,7 +1351,8 @@
 		} else {
 			// support integer values as pixels
 			value = typeof value === "string" ? value : value + "px";
-			return set.each(function(){
+
+            return set.each(function(){
 				this.style[ name ] = value;
 			});
 		}

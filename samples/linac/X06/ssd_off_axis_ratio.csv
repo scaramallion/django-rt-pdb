@@ -1,10 +1,14 @@
 # Depth in water in (cm)
+X_TITLE=Depth (cm)
 X_HEADERS=OAD (cm),1.5 cm<br />Depth,5.0 cm<br />Depth,10.0 cm<br />Depth,20.0 cm<br />Depth,30.0 cm<br />Depth
 X_VALUES=1.5,5.0,10.0,20.0,30.0
+X_FORMAT={:.1f}
 
 # Off axis distance in (cm)
-Y_FORMAT={:.1f}
+Y_TITLE=Off-axis Distance (cm)
+Y_HEADERS=
 Y_VALUES=0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,12.0,15.0,17.0,20.0
+Y_FORMAT={:.1f}
 
 # Reading(field size, depth) / reading(field size, depth of maximum dose)
 XY_FORMAT={:.3f}

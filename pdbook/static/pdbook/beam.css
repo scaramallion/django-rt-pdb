@@ -39,7 +39,7 @@
 .beam li a.selected{
     font-weight: 400;
     background-color: #0099dd;
-    color: #eee;
+    color: #fefefe;
 }
 
 .beam li a.unselected{
@@ -51,7 +51,7 @@
 .beam li a.unselected:hover{
     font-weight: 400;
     background-color: #0099dd;
-    color: #eee;
+    color: #fefefe;
 }
 
 

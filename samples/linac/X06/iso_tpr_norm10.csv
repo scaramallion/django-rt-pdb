@@ -1,13 +1,14 @@
 # Equivalent field size in (cm^2)
-X_HEADERS=Depth<br />(cm),3.0X<br />3.0Y,4.0X<br />4.0Y,5.0X<br />5.0Y,6.0X<br />6.0Y,7.0X<br />7.0Y,8.0X<br />8.0Y,10.0X<br />10.0Y,12.0X<br />12.0Y,14.0X<br />14.0Y,16.0X<br />16.0Y,18.0X<br />18.0Y,20.0X<br />20.0Y,22.0X<br />22.0Y,24.0X<br />24.0Y,26.0X<br />26.0Y,28.0X<br />28.0Y,30.0X<br />30.0Y,32.0X<br />32.0Y,34.0X<br />34.0Y,36.0X<br />36.0Y,38.0X<br />38.0Y,40.0X<br />40.0Y
 X_TITLE=Eq. Field Size (cm<sup>2</sup>)
-X_FORMAT={:.1f}
+X_HEADERS=Depth<br />(cm),3.0X<br />3.0Y,4.0X<br />4.0Y,5.0X<br />5.0Y,6.0X<br />6.0Y,7.0X<br />7.0Y,8.0X<br />8.0Y,10.0X<br />10.0Y,12.0X<br />12.0Y,14.0X<br />14.0Y,16.0X<br />16.0Y,18.0X<br />18.0Y,20.0X<br />20.0Y,22.0X<br />22.0Y,24.0X<br />24.0Y,26.0X<br />26.0Y,28.0X<br />28.0Y,30.0X<br />30.0Y,32.0X<br />32.0Y,34.0X<br />34.0Y,36.0X<br />36.0Y,38.0X<br />38.0Y,40.0X<br />40.0Y
 X_VALUES=3.0,4.0,5.0,6.0,7.0,8.0,10.0,12.0,14.0,16.0,18.0,20.0,22.0,24.0,26.0,28.0,30.0,32.0,34.0,36.0,38.0,40.0
+X_FORMAT={:.1f}
 
 # Depth in water in (cm)
 Y_TITLE=Depth (cm)
-Y_FORMAT={:.1f}
+Y_HEADERS=
 Y_VALUES=1.5,1.6,1.8,2.0,2.2,2.4,2.6,2.8,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5,12.0,13.0,14.0,15.0,16.0,17.0,18.0,19.0,20.0,21.0,22.0,23.0,24.0,25.0,26.0,27.0,28.0,29.0,30.0,31.0,32.0,33.0,34.0,35.0
+Y_FORMAT={:.1f}
 
 # Reading(field size, depth) / reading(field size, 10 cm) measured isocentrically
 XY_FORMAT={:.3f}

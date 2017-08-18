@@ -38,7 +38,8 @@
     display: none;
 }
 
-#modal-interpolate-2D {
+#modal-interpolate-2D,
+#modal-interpolate-1D {
     width: 500px;
     top: 40% !important;
     display: none;

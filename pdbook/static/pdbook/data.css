@@ -39,7 +39,7 @@
 .data li a.selected{
     font-weight: 400;
     background-color: #0099dd;
-    color: #eee;
+    color: #fefefe;
 }
 
 .data li a.unselected{
@@ -51,7 +51,7 @@
 .data li a.unselected:hover{
     font-weight: 400;
     background-color: #0099dd;
-    color: #eee;
+    color: #fefefe;
 }
 
 @media screen and (max-width: 1000px) {

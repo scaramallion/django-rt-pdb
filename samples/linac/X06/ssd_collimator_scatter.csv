@@ -1,7 +1,11 @@
 # Equivalent field size in (cm^2)
+X_TITLE=Collimator Scatter
 X_HEADERS=Field Size X by Y<br />(cm),S<sub>c</sub>
+X_VALUES=
+X_FORMAT=
 
 # Depth in water in (cm)
+Y_TITLE=Eq. Field Size<br />(cm<sup>2</sup>)
 Y_HEADERS=2.0 x 2.0,3.0 x 3.0,4.0 x 4.0,5.0 x 5.0,6.0 x 6.0,7.0 x 7.0,8.0 x 8.0,10.0 x 10.0,12.0 x 12.0,15.0 x 15.0,20.0 x 20.0,25.0 x 25.0,30.0 x 30.0,35.0 x 35.0,40.0 x 40.0
 Y_FORMAT={:.1f}
 Y_VALUES=2.0,3.0,4.0,5.0,6.0,7.0,8.0,10.0,12.0,15.0,20.0,25.0,30.0,35.0,40.0

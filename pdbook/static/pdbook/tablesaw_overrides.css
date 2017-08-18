@@ -15,7 +15,7 @@ table.tablesaw {
 .tablesaw thead th {
     font-weight: 400;
     background-color: #0099dd;
-    color: #eee;
+    color: #fefefe;
     line-height: 1em;
     text-transform: uppercase;
     text-align: center;
@@ -28,11 +28,11 @@ table.tablesaw {
     padding-bottom: .7em;
     font-family: sans-serif;
     border-right: 1px solid rgba(170, 205, 218, 0.2);
-    border-left: 1px solid #0099DD
+    border-left: 1px solid #0099DD;
 }
 
-.tablesaw thead tr:last-child th {
-    border-right: 1px solid #0099DD
+.tablesaw th:last-child {
+    border-right: 1px solid #0099DD !important;
 }
 
 /* Table body cells */

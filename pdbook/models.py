@@ -1,15 +1,17 @@
+import os
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.files.storage import DefaultStorage, FileSystemStorage
 from django.db import models
+from django.template.defaultfilters import slugify
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import format_html, mark_safe
 
-import os
-
 
 class Machine(models.Model):
-    """Define the model for a machine that produces radiation.
+    """Define the model for a device that produces radiation.
 
     Attributes
     ----------
@@ -27,7 +29,7 @@ class Machine(models.Model):
     name : str
         The machine name used in URLs. Must be unique.
     serial_number : str
-        The machine's serial number, default 00000000.
+        The machine's serial number.
     visible_name : str
         The text used in the machine selection link. May include HTML text
         formatting tags.
@@ -42,12 +44,24 @@ class Machine(models.Model):
     manufacturer = models.CharField(max_length=100, blank=True)
     model = models.CharField(max_length=100, blank=True)
     name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=200)
     serial_number = models.CharField(max_length=100, blank=True)
     visible_name = models.CharField(max_length=100)
+    
 
     def __str__(self):
         """Return a str representation of the Machine."""
         return self.visible_name
+
+    def get_absolute_url(self):
+        """Return the absolute url for the Machine"""
+        return reverse('machine', kwargs={'machine_slug' : self.slug})
+
+    def save(self, *args, **kwargs):
+        """Regenerate the slug every time the object gets saved"""
+        # Otherwise changes to self.name may not get reflected in slug
+        self.slug = slugify(self.name)
+        super(Machine, self).save(*args, **kwargs)
 
 
 class Beam(models.Model):
@@ -84,6 +98,7 @@ class Beam(models.Model):
                                          ('ISO', 'Radioisotope'),
                                         ),
                                 default='MVP')
+    slug = models.SlugField(max_length=200)
     visible_name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -101,7 +116,7 @@ class Beam(models.Model):
 
     def validate_unique(self, exclude=None):
         """All Beam objects for a given Machine must have a unique `name`."""
-        # Get a list of all the Data objects for the current Beam
+        # Get a list of all the Beam objects for the current Machine
         beams = Beam.objects.filter(machine=self.machine)
         beam_names = [b.name for b in beams]
 
@@ -111,6 +126,18 @@ class Beam(models.Model):
                                   .format(self.name))
         
         return super(Beam, self).validate_unique(exclude)
+
+    def get_absolute_url(self):
+        """Return the absolute url for the Beam"""
+        return reverse('beam',
+                       kwargs={'machine_slug' : self.machine.slug,
+                               'beam_slug' : self.slug})
+
+    def save(self, *args, **kwargs):
+        """Regenerate the slug every time the object gets saved"""
+        self.slug = slugify(self.name)
+        super(Beam, self).save(*args, **kwargs)
+
 
 class OverwriteStorage(FileSystemStorage):
     """Override the FileSystemStorage class to overwrite existing files."""
@@ -136,12 +163,12 @@ class DataManager(models.Manager):
         -------
         str
             The upload path, including the filename. The file will then be
-            uploaded to <MEDIA_ROOT>/<MACHINE NAME>/<BEAM NAME>/<DATA NAME>
+            uploaded to <MEDIA_ROOT>/<MACHINE SLUG>/<BEAM SLUG>/<FILE NAME>
             where <MEDIA_ROOT> is the Django MEDIA_ROOT location.
         """
-        m_name = instance.beam.machine.name
-        b_name = instance.beam.name
-        return '{0}/{1}/{2}'.format(m_name, b_name, filename) 
+        m_slug = instance.beam.machine.slug
+        b_slug = instance.beam.slug
+        return '{0}/{1}/{2}'.format(m_slug, b_slug, filename) 
 
 
 class Data(models.Model):
@@ -185,6 +212,7 @@ class Data(models.Model):
                                                    ('2D', '2D interpolation')))
     interp1D_indexes = models.CharField(max_length=100, blank=True)
     name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=200)
     visible_name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -207,4 +235,16 @@ class Data(models.Model):
                                   .format(self.name))
         
         return super(Data, self).validate_unique(exclude)
+
+    def get_absolute_url(self):
+        """Return the absolute url for the Data"""
+        return reverse('data',
+                       kwargs={'machine_slug' : self.beam.machine.slug,
+                               'beam_slug' : self.beam.slug,
+                               'data_slug' : self.slug})
+
+    def save(self, *args, **kwargs):
+        """Regenerate the slug every time the object gets saved"""
+        self.slug = slugify(self.name)
+        super(Data, self).save(*args, **kwargs)
         
