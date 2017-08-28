@@ -34,19 +34,32 @@ class Machine(models.Model):
         The text used in the machine selection link. May include HTML text
         formatting tags.
     """
-    description = models.CharField(max_length=100, blank=True)
+    description = models.CharField(max_length=100, blank=True,
+                                   help_text="A description of the machine.")
     machine_type = models.CharField(max_length=10, 
                                     choices=(('LINAC', 'Linear Accelerator'),
                                              ('ORTHO', 'Orthovoltage Unit'),
                                              ('SOURCE', 'Radiation Source'),
                                             ),
-                                    default='LINAC')
-    manufacturer = models.CharField(max_length=100, blank=True)
-    model = models.CharField(max_length=100, blank=True)
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=200)
-    serial_number = models.CharField(max_length=100, blank=True)
-    visible_name = models.CharField(max_length=100)
+                                    default='LINAC',
+                                    help_text="The type of machine.")
+    manufacturer = models.CharField(max_length=100, blank=True,
+                                    help_text="The machine's manufacturer.")
+    model = models.CharField(max_length=100, blank=True,
+                             help_text="The machine's model name/number.")
+    name = models.CharField(max_length=100, unique=True,
+                            help_text="The name to use for this machine, "
+                                      "must be unique (case independant).")
+    slug = models.SlugField(max_length=200,
+                            help_text="The text that will be used for "
+                                      "the machine's part of the url (derived "
+                                      "from the Name value).")
+    serial_number = models.CharField(max_length=100, blank=True,
+                             help_text="The machine's serial number.")
+    visible_name = models.CharField(max_length=100,
+                                    help_text="The (short) text that will be "
+                                              "displayed as a name for this "
+                                              "machine. HTML tags are supported.")
     
 
     def __str__(self):
@@ -87,19 +100,30 @@ class Beam(models.Model):
         The text used in the beam selection link. May include HTML text
         formatting tags.
     """
-    description = models.CharField(max_length=100, blank=True)
-    energy = models.FloatField()
-    name = models.CharField(max_length=100)
-    machine = models.ForeignKey(Machine, related_name="machine")
+    description = models.CharField(max_length=100, blank=True,
+                                   help_text="A description of the beam.")
+    energy = models.FloatField(help_text="The nominal energy of the beam.")
+    name = models.CharField(max_length=100,
+                            help_text="The name to use for this beam, "
+                                      "must be unique (case independant).")
+    machine = models.ForeignKey(Machine, related_name="machine",
+                             help_text="The machine object this beam belongs to.")
     modality = models.CharField(max_length=3, 
                                 choices=(('MVP', 'MV Photons'), 
                                          ('MVE', 'MeV Electrons'), 
                                          ('KVP', 'kV Photons'),
                                          ('ISO', 'Radioisotope'),
                                         ),
-                                default='MVP')
-    slug = models.SlugField(max_length=200)
-    visible_name = models.CharField(max_length=100)
+                                default='MVP',
+                                help_text="The modality of the beam.")
+    slug = models.SlugField(max_length=200,
+                            help_text="The text that will be used for "
+                                      "the beam's part of the url (derived "
+                                      "from the Name value).")
+    visible_name = models.CharField(max_length=100,
+                                    help_text="The (short) text that will be "
+                                              "displayed as a name for this "
+                                              "beam. HTML tags are supported.")
 
     def __str__(self):
         """Return a str representation of the Beam."""
@@ -111,7 +135,7 @@ class Beam(models.Model):
         if self.modality != 'ISO':
             energy_mode = '({0} {1})'.format(self.energy, mode_str[self.modality])
         # TODO: Sort by machine name then photons, electrons, then energy
-        s = "{2} - {0} - ({1})".format(self.visible_name, self.description, self.machine.visible_name)
+        s = "{1} - {0}".format(self.visible_name, self.machine.visible_name)
         return s
 
     def validate_unique(self, exclude=None):
@@ -200,20 +224,39 @@ class Data(models.Model):
     
     objects = DataManager()
     
-    beam = models.ForeignKey(Beam, related_name="beam_name", default=0)
+    beam = models.ForeignKey(Beam, related_name="beam_name", default=0,
+                             help_text="The beam object this data belongs to.")
     data = models.FileField(upload_to=objects._upload_directory_path,
-                            storage=OverwriteStorage())
-    data_source = models.CharField(max_length=100, blank=True)
-    description = models.CharField(max_length=200, blank=True)
+                            storage=OverwriteStorage(),
+                            help_text="The CSV file containing the table data.")
+    data_source = models.CharField(max_length=100, blank=True,
+                                   help_text="The source of the table data. Will "
+                                   "overwrite the SOURCE= value in the CSV data file.")
+    description = models.CharField(max_length=200, blank=True,
+                                   help_text="A description of the table data. Will "
+                                   "overwrite the DESCRIPTION= value in the CSV file.")
     interpolation_type = models.CharField(default='NA',
                                           max_length=3,
                                           choices=(('NA', 'No interpolation'),
                                                    ('1D', '1D interpolation'),
-                                                   ('2D', '2D interpolation')))
-    interp1D_indexes = models.CharField(max_length=100, blank=True)
-    name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=200)
-    visible_name = models.CharField(max_length=100)
+                                                   ('2D', '2D interpolation')),
+                                          help_text="If 1D/2D interpolation is "
+                                                    "chosen then the interpolation "
+                                                    "widget will be available.")
+    show_y_values = models.BooleanField(default=False,
+                                        help_text="Show the Y parameter values "
+                                        "in addition to the Y row labels.")
+    name = models.CharField(max_length=100, unique=True,
+                            help_text="The name to use for the table data, "
+                                      "must be unique (case independant).")
+    slug = models.SlugField(max_length=200,
+                            help_text="The text that will be used for "
+                                      "the data's part of the url (derived "
+                                      "from the Name value).")
+    visible_name = models.CharField(max_length=100,
+                                    help_text="The (short) text that will be "
+                                              "displayed as a name for this "
+                                              "data. HTML tags are supported.")
 
     def __str__(self):
         """Return a str representation of the Data."""

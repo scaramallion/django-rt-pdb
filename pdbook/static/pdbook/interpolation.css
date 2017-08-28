@@ -38,21 +38,6 @@
     display: none;
 }
 
-#modal-interpolate-2D,
-#modal-interpolate-1D {
-    width: 500px;
-    top: 40% !important;
-    display: none;
-    background: #fff;
-}
-
-#modal-info {
-    width: 500px;
-    top: 40% !important;
-    display: none;
-    background: #fff;
-}
-
 @media screen and (max-width: 1000px) {
     .table-btn {
         font-size: 10px;
@@ -79,6 +64,14 @@
 
 
 /* Interpolation tables */
+#modal-interpolate-2D,
+#modal-interpolate-1D {
+    width: 500px;
+    top: 40% !important;
+    display: none;
+    background: #fff;
+}
+
 .interpolation-container {
     text-align: center;
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -107,7 +100,8 @@
 }
 
 #x-input,
-#y-input {
+#y-input,
+#y1-input {
     height: 20px;
     width: 100%;
     background: #fff;
@@ -119,7 +113,8 @@
     margin-left: -1px;
 }
 
-#interp-result {
+#interp-result,
+#interp-result1 {
     height: 20px;
     background: #0099dd;
     color: #eee !important;
@@ -137,7 +132,8 @@
     color: #666 !important;
 }
 
-#tl, #tr, #bl, #br {
+#tl, #tr, #bl, #br,
+#tl1, bl1 {
     /*width: 100%;*/
 }
 
@@ -175,4 +171,51 @@
     color: #eee;
     font-family: sans-serif;
     text-transform: uppercase;
+}
+
+/* Info tables */
+#modal-info {
+    width: 650px;
+    top: 30% !important;
+    display: none;
+    background: #fff;
+}
+
+.info-container {
+    text-align: left;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 20px;
+    width: 80%;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.info-table {
+    width: 100%;
+    table-layout: fixed;
+    /*margin-left: auto;
+    margin-right: auto;*/
+}
+
+#info-title{
+    text-transform: uppercase;
+}
+
+#info-sub{
+    display: block;
+    text-decoration: none;
+    padding-top: 5px;
+    padding-bottom: 50px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-family: sans-serif;
+    vertical-align: middle;
+    text-align: left;
+    border: 1px solid #0099dd;
+    /*border: 1px solid #bfe5f6;*/
+    /*height: 21px;*/
+    min-height: 50px;
 }

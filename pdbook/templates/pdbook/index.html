@@ -1,6 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
+<meta charset=utf-8>
 <html lang='en'>
   <head>
     <title>Planning Data - Your Department - Your Hospital</title>
@@ -37,14 +38,29 @@
           $.ajax({
             type: "POST",
             url: "{{ request.path }}/interpolate",
-            data: {'x_value' : $('#x_value_2d').val(),
-                   'y_value' : $('#y_value_2d').val()
-                  },
-            complete: [updateTable2D]
+            data: {'x_value' : $('#x-input').val(),
+                   'y_value' : $('#y-input').val(),
+                   'interp_type' : '2D',
+            },
+            complete: [updateTable]
           });
           return false;
         });
-    });
+      });
+
+      $(document).ready(function() {
+        $("#interpolation-form-1D").submit(function(event) {
+          $.ajax({
+            type: "POST",
+            url: "{{ request.path }}/interpolate",
+            data: {'y_value' : $('#y1-input').val(),
+                   'interp_type' : '1D',
+            },
+            complete: [updateTable]
+          });
+          return false;
+        });
+      });
     </script>
   </head>
   <body>
@@ -207,16 +223,16 @@
               <td style="color: #666 !important;">{{ x_title|safe }}</td>
             </tr>
             <tr>
-              <td class="input-near" id="y-a"></td>
-              <td id="tl"></td>
+              <td class="input-near" id="y1-a"></td>
+              <td id="tl1"></td>
             </tr>
             <tr>
-              <td><input id="y-input" type="text"></td>
-              <td id="interp-result"></td>
+              <td><input id="y1-input" type="text"></td>
+              <td id="interp-result1"></td>
             </tr>
             <tr>
-              <td class="input-near" id="y-b"></td>
-              <td id="bl"></td>
+              <td class="input-near" id="y1-b"></td>
+              <td id="bl1"></td>
             </tr>
           </table>
         </div>
@@ -227,8 +243,25 @@
       {% endif %}
     </div>
     <div id="modal-info">
-        Description: {{ selected_data.description }} <br />
-        Source: {{ selected_data.data_source }}
+      <div class="info-container">
+        <table class="info-table">
+          <tr>
+            <td id="info-title">Data Description</td>
+          </tr>
+          <tr>
+            <td id="info-sub">{{ description|safe }} </td>
+          </tr>
+        </table>
+        <br />
+        <table class="info-table">
+          <tr>
+            <td id="info-title">Data Source</td>
+          </tr>
+          <tr>
+            <td id="info-sub">{{ source|safe }}</td>
+          </tr>
+        </table>
+      </div>
     </div>
     <div id="lean_overlay"></div>
   </body>

@@ -17,7 +17,7 @@ table.tablesaw {
     background-color: #0099dd;
     color: #fefefe;
     line-height: 1em;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     text-align: center;
     font-size: 12px;
 }

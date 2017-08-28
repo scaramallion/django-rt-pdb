@@ -1,0 +1,35 @@
+# AAPM TG43 Radial Dose Function
+
+# Metadata
+DESCRIPTION=
+SOURCE=
+
+X_TITLE=
+X_HEADERS=r (cm),g<sub>L</sub>(r)
+X_FORMAT=
+X_VALUES=
+
+Y_TITLE=
+Y_HEADERS=
+Y_FORMAT={:.0f}
+Y_VALUES=0.1,0.15,0.25,0.50,0.75,1.0,1.5,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0
+
+# Table data
+XY_FORMAT={:.3f}
+XY_TYPE=NUMERIC
+1.066
+1.086
+1.098
+1.076
+1.042
+1.000
+0.908
+0.813
+0.633
+0.482
+0.361
+0.269
+0.1990
+0.1470
+0.1080
+0.0790

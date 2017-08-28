@@ -1,18 +1,32 @@
+import codecs
+import csv
+from heapq import nsmallest
 import json
+import re
 
 from django.http import HttpResponse
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
+
+import numpy
+from scipy.interpolate import interp1d, interp2d
 
 from pdbook.models import Machine, Beam, Data
 
 
 def index(request):
-    """Return a page with a list of available Machines"""
-    #m = get_object_or_404(Machine, slug=slug)
-    
-    # Get all machines
+    """Return a page with the available Machines
+
+    Parameters
+    ----------
+    request : django.core.handlers.wsgi.WSGIRequest
+        The request
+
+    Returns
+    -------
+    response : HttpResponse
+    """
     machine_list = _get_machines()
 
     # Build response
@@ -23,15 +37,22 @@ def index(request):
     return render(request, 'pdbook/index.html', context)
 
 def get_machine(request, machine_slug):
-    """Return a page with a list of available Beams for the selected Machine."""
-    # Get all machines
+    """Return a page with the available Beams for the selected Machine
+
+    Parameters
+    ----------
+    request : django.core.handlers.wsgi.WSGIRequest
+        The request
+    machine_slug :str
+        The slug for the selected Machine object
+
+    Returns
+    -------
+    response : HttpResponse
+    """
+    m = get_object_or_404(Machine, slug=machine_slug)
+
     machine_list = _get_machines()
-
-    # Get selected machine
-    # FIXME: use id instead
-    m = Machine.objects.get(slug=machine_slug)
-
-    # Get all beams for the selected machine
     beam_list = _get_beams(m)
 
     # Build response
@@ -44,20 +65,26 @@ def get_machine(request, machine_slug):
     return render(request, 'pdbook/index.html', context)
 
 def get_beam(request, machine_slug, beam_slug):
-    """Return a page with a list of available Data for the selected Beam."""
-    # Get all machines
+    """Return a page with the available Data for the selected Beam
+
+    Parameters
+    ----------
+    request : django.core.handlers.wsgi.WSGIRequest
+        The request
+    machine_slug :str
+        The slug for the selected Machine object
+    beam_slug : str
+        The slug for the selected Beam object
+
+    Returns
+    -------
+    response : HttpResponse
+    """
+    m = get_object_or_404(Machine, slug=machine_slug)
+    b = get_object_or_404(Beam, slug=beam_slug, machine=m)
+
     machine_list = _get_machines()
-
-    # Get selected machine
-    m = Machine.objects.get(slug=machine_slug)
-
-    # Get all beams for the selected machine
     beam_list = _get_beams(m)
-
-    # Get the selected beam
-    b = Beam.objects.get(slug=beam_slug, machine=m)
-
-    # Get all data for the selected beam
     data_list = _get_data(b)
 
     # Build response
@@ -72,30 +99,37 @@ def get_beam(request, machine_slug, beam_slug):
     return render(request, 'pdbook/index.html', context)
 
 def get_data(request, machine_slug, beam_slug, data_slug):
-    """Return a page with the table data for the selected Data."""
-    # Get all machines
+    """Return a page with the table data for the selected Data.
+
+    Parameters
+    ----------
+    request : django.core.handlers.wsgi.WSGIRequest
+        The request
+    machine_slug :str
+        The slug for the selected Machine object
+    beam_slug : str
+        The slug for the selected Beam object
+    data_slug : str
+        The slug for the selected Data object
+
+    Returns
+    -------
+    response : HttpResponse
+    """
+    m = get_object_or_404(Machine, slug=machine_slug)
+    b = get_object_or_404(Beam, slug=beam_slug, machine=m)
+    d = get_object_or_404(Data, slug=data_slug, beam=b)
+
     machine_list = _get_machines()
-
-    # Get selected machine
-    m = Machine.objects.get(slug=machine_slug)
-
-    # Get all beams for the selected machine
     beam_list = _get_beams(m)
-
-    # Get the selected beam
-    b = Beam.objects.get(slug=beam_slug, machine=m)
-
-    # Get all data for the selected beam
     data_list = _get_data(b)
 
-    # Get the selected data
-    d = Data.objects.get(slug=data_slug, beam=b)
-
     # Parse the data
-    #try:
-    table_data = _read_data_file(d)
-    #except:
-    #    print('Error reading data file')
+    try:
+        table_data = _read_data_file(d)
+    except Exception as ex:
+        table_data = 'There was an error reading the data file'
+
     if isinstance(table_data, str):
         context = {}
         if beam_list:
@@ -105,7 +139,9 @@ def get_data(request, machine_slug, beam_slug, data_slug):
                        'selected_machine' : m,
                        'selected_beam' : b,
                        'selected_data' : d,
-                       'error_message' : table_data}
+                       'error_message' : table_data,
+                       'description' : d.description,
+                       'source' : d.data_source}
         response = render(request, 'pdbook/index.html', context)
     else:
         context = {}
@@ -123,73 +159,72 @@ def get_data(request, machine_slug, beam_slug, data_slug):
     return response
 
 def interpolate(request, machine_slug, beam_slug, data_slug):
-    # Get all machines
-    #machine_list = _get_machines()
+    """Returns the results from the interpolation widget
 
-    # Get selected machine
-    m = Machine.objects.get(slug=machine_slug)
+    Parameters
+    ----------
+    request : django.core.handlers.wsgi.WSGIRequest
+        The interpolation request
+    machine_slug :str
+        The slug for the selected Machine object
+    beam_slug : str
+        The slug for the selected Beam object
+    data_slug : str
+        The slug for the selected Data object to be interpolated
 
-    # Get all beams for the selected machine
-    #beam_list = _get_beams(m)
-
-    # Get the selected beam
-    b = Beam.objects.get(slug=beam_slug, machine=m)
-
-    # Get all data for the selected beam
-    #data_list = _get_data(b)
-
-    # Get the selected data
-    d = Data.objects.get(slug=data_slug, beam=b)
+    Returns
+    -------
+    result : dict
+        The result of the interpolation. For 1D keys are 'x_value_ok',
+        'table_type', 'y_values', 'table_data'.
+        For 2D keys are 'y_value_ok', 'x_value_ok', 'table_type', 'x_values',
+        'y_values', 'table_data'.
+    """
+    m = get_object_or_404(Machine, slug=machine_slug)
+    b = get_object_or_404(Beam, slug=beam_slug, machine=m)
+    d = get_object_or_404(Data, slug=data_slug, beam=b)
 
     data = _read_data_file(d)
 
-    if 'x_value' in request.POST.keys():
-        x = float(request.POST['x_value'])
+    if request.POST['interp_type'] == '1D':
+        y = None
+        if 'y_value' in request.POST.keys() and request.POST['y_value']:
+            y = float(request.POST['y_value'])
 
-    if 'y_value' in request.POST.keys():
-        y = float(request.POST['y_value'])
+        result = _do_interpolate_1d(y, data)
+    elif request.POST['interp_type'] == '2D':
+        x = None
+        if 'x_value' in request.POST.keys() and request.POST['x_value']:
+            x = float(request.POST['x_value'])
 
-    result = _do_interpolate('2D', x, y, data)
+        y = None
+        if 'y_value' in request.POST.keys() and request.POST['y_value']:
+            y = float(request.POST['y_value'])
+
+        result = _do_interpolate_2d(x, y, data)
+    else:
+        result = Http404('No such interpolation type')
 
     return result
 
 def _get_machines():
-    """
-    Returns
-    -------
-    list of FIXME
-    """
+    """Return a list of Machine model objects, sorted by name"""
     return Machine.objects.order_by('-name')[:].reverse
 
 def _get_beams(machine):
-    """
-    Parameters
-    ----------
-    machine : django_rt_pdb.models.Machine
-
-    Returns
-    -------
-    list of FIXME
-    """
+    """Return a list of Beam model objects for Machine `machine`, sorted by modality and name"""
     return Beam.objects.filter(machine=machine).order_by('modality', '-name')[:].reverse
 
 def _get_data(beam):
-    """
-    Parameters
-    ----------
-    beam : django_rt_pdb.models.Beam
-
-    Returns
-    -------
-    list of FIXME
-    """
+    """Return a list of Data model objects for Beam `beam`, sorted by name"""
     return Data.objects.filter(beam=beam).order_by('-name')[:].reverse
 
-def _parse_csv_line(line):
-    """
+def _parse_csv_row(row):
+    """Parse the CSV row, returning variables and values.
+
     Parameters
     ----------
-    line : str
+    row : list of str
         A non-empty line from the CSV data file with starting and ending white
         space stripped out.
 
@@ -199,40 +234,62 @@ def _parse_csv_line(line):
         The variable name, and list of variable values. If the line contains
         no variable then returns None.
     """
+    # Allowed variables
     variables = ['X_TITLE', 'X_HEADERS', 'X_VALUES', 'X_FORMAT',
                  'Y_TITLE', 'Y_HEADERS', 'Y_VALUES', 'Y_FORMAT',
                  'XY_FORMAT', 'XY_TYPE', 'DESCRIPTION', 'SOURCE']
 
-    csv_data = line.split(',')
-    
-    # Variables
-    if '=' in csv_data[0]:
-        variable_name = csv_data[0].split('=')[0].strip()
-        variable_values = [csv_data[0].split('=')[1].strip()]
+    if '=' in row[0]:
+        split_item = row[0].split('=')
+        variable_name = split_item[0]
+        variable_values = [split_item[1]]
 
         if variable_name not in variables:
             raise ValueError('The CSV data file contains an unknown variable.')
 
-        if csv_data[1:]:
-            variable_values.extend(csv_data[1:])
+        if row[1:]:
+            variable_values.extend(row[1:])
 
         return variable_name, variable_values
 
     return None, None
 
+def _skip_csv_comments(rows, commentchar='#'):
+    """Skip everything following `commentchar`.
+
+    Parameters
+    ----------
+    rows : list of list of str
+        The CSV file contents.
+    commentchar : str
+        The character that indicates a comment follows. Anything after this
+        character will be removed.
+
+    Yields
+    ------
+    list of str
+        The CSV row contents without comments.
+    """
+    pattern = re.compile(r'\s*{}.*$'.format(commentchar))
+    for row in rows:
+        row = re.sub(pattern, '', row).strip()
+        if row:
+            yield row
+
 def _read_data_file(data_obj):
     """Parse the uploaded data file for the contents
 
-    Comments
-    --------
-    The hash character, #, is used to denote comments.
+    Special Characters
+    ------------------
+    The hash character, #, is used to denote comments, the caret character, ^,
+    can be used to escape the delimiter character ','.
 
     Data File Variables
     -------------------
     X_TITLE
     ~~~~~~~
-    Required if 2D. Character string, may include HTML tags. One value allowed.
-    The title of the x variable data for f(x, y). Examples:
+    Character string, may include HTML tags. One value allowed. The title of
+    the x variable data for f(x, y). Examples:
         X_TITLE=Equivalent Field Size (cm)
     
     X_LABELS
@@ -317,44 +374,51 @@ def _read_data_file(data_obj):
             'XY_FORMAT' : '{}', 'XY_VALUES' : [], 'XY_TYPE' : ['NUMERIC'],
             'DESCRIPTION' : '', 'SOURCE' : ''}
 
-    with open(data_obj.data.path, 'r') as f:
-        contents = f.readlines()
-        for line in contents:
-            # Strip out any comments
-            if '#' in line:
-                line = line[:line.index('#')]
-            # Remove white space
-            line = line.strip()
-            if line != '':
-                line_list = line.split(',')
+    with open(data_obj.data.path, 'r') as csvfile:
+        reader = csv.reader(_skip_csv_comments(csvfile), quotechar='|', escapechar='^')
+        for row in reader:
+            try:
+                var_name, var_values = _parse_csv_row(row)
+            except ValueError:
+                msg = 'Unable to parse the data file'
+                return msg
 
-                try:
-                    var_name, var_values = _parse_csv_line(line)
-                except ValueError:
-                    msg = 'Unable to parse the file'
-                    return msg
+            if (var_name, var_values) == (None, None):
+                if data['XY_TYPE'][0].upper() == 'NUMERIC':
+                    row[:] = [float(val) for val in row]
+                data['XY_VALUES'].append(row)
+            else:
+                data[var_name] = var_values
 
-                if (var_name, var_values) == (None, None):
-                    if data['XY_TYPE'][0].upper() == 'NUMERIC':
-                        line_list[:] = [float(val) for val in line_list]
-                    data['XY_VALUES'].append(line_list)
-                else:
-                    data[var_name] = var_values
+    data['DESCRIPTION'] = ', '.join(data['DESCRIPTION'])
+    data['DESCRIPTION'] = data['DESCRIPTION'].encode('utf-8')
+    data['DESCRIPTION'] = data['DESCRIPTION'].decode('unicode-escape')
+    data['SOURCE'] = ', '.join(data['SOURCE'])
+    data['SOURCE'] = data['SOURCE'].encode('utf-8')
+    data['SOURCE'] = data['SOURCE'].decode('unicode-escape')
+
+
+    if data_obj.description:
+        data['DESCRIPTION'] = data_obj.description
+    if data_obj.data_source:
+        data['SOURCE'] = data_obj.data_source
 
     if data['X_TITLE']:
-        x_title = data['X_TITLE'][0]
+        x_title = ', '.join(data['X_TITLE'])
     else:
         x_title = ''
 
     if data['Y_TITLE']:
-        y_title = data['Y_TITLE'][0]
+        y_title = ', '.join(data['Y_TITLE'])
     else:
         y_title = ''
 
     # Get the column labels, formatting if necessary
-    if data['X_HEADERS'] != ['']:
+    if data['X_HEADERS'] != '':
         column_labels = data['X_HEADERS']
-    elif data['X_VALUES'] != ['']:
+        column_labels[:] = [val.encode('utf-8') for val in column_labels]
+        column_labels[:] = [val.decode('unicode-escape') for val in column_labels]
+    elif data['X_VALUES'] != []:
         column_labels = [data['X_FORMAT'][0].format(float(val)) for val in data['X_VALUES']]
     else:
         msg = 'The file must have either non-blank X_HEADERS or X_VALUES values'
@@ -363,13 +427,14 @@ def _read_data_file(data_obj):
     # Get the row labels, formatting if necessary
     if data['Y_HEADERS'] != ['']:
         row_labels = data['Y_HEADERS']
+        row_labels[:] = [val.encode('utf-8') for val in row_labels]
+        row_labels[:] = [val.decode('unicode-escape') for val in row_labels]
     elif data['Y_VALUES'] != ['']:
         row_labels = [data['Y_FORMAT'][0].format(float(val)) for val in data['Y_VALUES']]
     else:
         msg = 'The file must have either non-blank Y_HEADERS or Y_VALUES values'
         return msg
 
-    #print(data['XY_VALUES'])
     if data['XY_VALUES'] != [] and data['XY_TYPE'][0].upper() == 'NUMERIC':
         # Apply the XY format to the table data
         values_out = []
@@ -377,6 +442,11 @@ def _read_data_file(data_obj):
             new_row = [data['XY_FORMAT'][0].format(xy) for xy in xy_row]
             new_row.insert(0, y_val)
             values_out.append(new_row)
+
+        # Force show the Y VALUES if available and user chooses option
+        if data_obj.show_y_values and data['Y_VALUES'] != ['']:
+            for xy_row, y_val in zip(values_out, data['Y_VALUES']):
+                xy_row.insert(1, y_val)
     elif data['XY_VALUES'] != []:
         values_out = data['XY_VALUES']
     else:
@@ -388,27 +458,114 @@ def _read_data_file(data_obj):
              'x_title' : x_title,
              'x_values' : data['X_VALUES'],
              'y_title' : y_title,
-             'y_values' : data['Y_VALUES']}
+             'y_values' : data['Y_VALUES'],
+             'description' : data['DESCRIPTION'],
+             'source' : data['SOURCE'],
+             'x_format' : data['X_FORMAT'][0],
+             'y_format' : data['Y_FORMAT'][0],
+             'xy_format' : data['XY_FORMAT'][0],
+             }
 
-def _do_interpolate(interpolation_type, x, y, data):
-    x_value_ok = True
-    y_value_ok = True
+def _do_interpolate_1d(y, data):
+    """Return a HttpResponse containing the results from interpolating `data` at `y`.
 
-    if not min(data['x_values']) <= x <= max(data['x_values']):
-        x_value_ok = False
+    The results will be formatted in accordance with the formats specified
+    in the CSV file.
 
-    if not min(data['y_values']) <= y <= max(data['y_values']):
-        y_value_ok = False
+    Parameters
+    ----------
+    y :
+        The Y value to perform the interpolation with
+    data :
+        The data to interpolate
 
-    result_table = [['1.000', '1.001', '1.002'],
-                    ['1.003', '1.004', '1.005'],
-                    ['1.006', '1.007', '1.008']]
+    Returns
+    -------
+    HttpResponse
+    """
+    y_value_ok = False
+    y_arr = numpy.asarray(data['y_values'], dtype=numpy.float)
+    if y and (min(y_arr) <= y <= max(y_arr)):
+        y_value_ok = True
+        y_neighbours = nsmallest(2, y_arr, key=lambda k: abs(k - y))
+        y_neighbours.sort()
+
+    out = [val[1] for val in data['table_data']]
+    out = numpy.asarray(out, dtype=numpy.float)
+    interp_func = interp1d(y_arr, out, kind='linear')
+
+    y_vals = []
+    if y_value_ok:
+        y_vals = [y_neighbours[0], y, y_neighbours[1]]
+
+    result = [data['xy_format'].format(interp_func(val).tolist()) for val in y_vals]
+
+    y_vals[:] = [data['y_format'].format(val) for val in y_vals]
+    
+    result = {'y_value_ok' : y_value_ok,
+              'table_type' : '1D',
+              'y_values' : y_vals,
+              'table_data' : result}
+
+    return HttpResponse(json.dumps(result), content_type="application/json")
+
+def _do_interpolate_2d(x, y, data):
+    """Return a HttpResponse containing the results from interpolating `data` at (`x`, `y`).
+
+    The results will be formatted in accordance with the formats specified
+    in the CSV file.
+
+    Parameters
+    ----------
+    x:
+        The X value to perform the interpolation with
+    y :
+        The Y value to perform the interpolation with
+    data :
+        The data to interpolate
+
+    Returns
+    -------
+    HttpResponse
+    """
+    x_value_ok = False
+    y_value_ok = False
+
+    x_arr = numpy.asarray(data['x_values'], dtype=numpy.float)
+    y_arr = numpy.asarray(data['y_values'], dtype=numpy.float)
+
+    if x and (min(x_arr) <= x <= max(x_arr)):
+        x_value_ok = True
+        x_neighbours = nsmallest(2, x_arr, key=lambda k: abs(k - x))
+        x_neighbours.sort()
+
+    if y and (min(y_arr) <= y <= max(y_arr)):
+        y_value_ok = True
+        y_neighbours = nsmallest(2, y_arr, key=lambda k: abs(k - y))
+        y_neighbours.sort()
+
+    out = []
+    for row in data['table_data']:
+        out.append(row[1:])
+
+    out = numpy.asarray(out, dtype=numpy.float)
+    interp_func = interp2d(x_arr, y_arr, out, kind='linear')
+
+    x_vals = [x_neighbours[0], x, x_neighbours[1]]
+    y_vals = [y_neighbours[0], y, y_neighbours[1]]
+
+    result = []
+    for jj in y_vals:
+        result.append([data['xy_format'].format(interp_func(ii, jj)[0]) for ii in x_vals])
+
+    x_vals[:] = [data['x_format'].format(val) for val in x_vals]
+    y_vals[:] = [data['y_format'].format(val) for val in y_vals]
 
     result = {'y_value_ok' : y_value_ok,
               'x_value_ok' : x_value_ok,
               'table_type' : '2D',
-              'table_data' : result_table,
-              'x_title' : 'X Title',
-              'y_title' : 'Y Title'}
+              'x_values' : x_vals,
+              'y_values' : y_vals,
+              'table_data' : result}
 
     return HttpResponse(json.dumps(result), content_type="application/json")

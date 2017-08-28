@@ -1,0 +1,41 @@
+# Orthovoltage equivalent diameter of a square
+
+# Metadata
+DESCRIPTION=Equivalent diameter for a square field
+SOURCE=British Journal of Radiology Supplement 25 "Central Axis Depth Dose for Use in Radiotherapy (1996)
+
+# Field size length
+X_TITLE=Equivalent Circle<br>(cm)
+X_HEADERS=EQUIVALENT SQUARE<br>(cm),EQUIVALENT DIAMETER<br/>(cm)
+X_FORMAT=
+X_VALUES=
+
+# Field size width
+Y_TITLE=Equivalent Square<br>(cm)
+Y_HEADERS=
+Y_FORMAT={:.1f}
+Y_VALUES=0.9,1.8,2.7,3.6,4.5,5.4,6.3,7.2,8.1,9.0,9.9,10.8,11.7,12.6,13.5,14.4,15.3,16.2,17.1,18.0
+
+# Table data
+XY_FORMAT={:.1f}
+XY_TYPE=NUMERIC
+ 1.0
+ 2.0
+ 3.0
+ 4.0
+ 5.0
+ 6.0
+ 7.0
+ 8.0
+ 9.0
+10.0
+11.0
+12.0
+13.0
+14.0
+15.0
+16.0
+17.0
+18.0
+19.0
+20.0

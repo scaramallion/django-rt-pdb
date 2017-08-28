@@ -1,0 +1,41 @@
+# 50 cm SSD, Filter 1 Backscatter Factors
+
+# Metadata
+DESCRIPTION=
+SOURCE=
+
+# Field size length
+X_TITLE=Backscatter Factor
+X_HEADERS=APPLICATOR,FIELD DIAMETER<br/>(cm),BSF
+X_FORMAT=
+X_VALUES=
+
+# Field size width
+Y_TITLE=Field Diameter<br/>(cm)
+Y_HEADERS=,,,,,,,,12 x 6,,10 x 8,10 cm \u00D8,12 x 8,10 x 10,15 x 8,12 x 12,20 x 10,15 x 12,,
+Y_FORMAT={:.1f}
+Y_VALUES=1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,8.9,9.0,9.9,10.0,10.7,11.2,11.5,13.4,14.5,14.8,15.0,20.0
+
+# Table data
+XY_FORMAT={:.3f}
+XY_TYPE=NUMERIC
+1.054
+1.100
+1.131
+1.153
+1.168
+1.181
+1.191
+1.200
+1.207
+1.208
+1.215
+1.215
+1.218
+1.220
+1.221
+1.227
+1.231
+1.232
+1.233
+1.239

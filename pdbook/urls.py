@@ -12,5 +12,5 @@ urlpatterns = [
     # ex: /pdb/test-machine/06-mv-photons/pdd
     url(r'^(?P<machine_slug>[-\w]+)/(?P<beam_slug>[-\w]+)/(?P<data_slug>[-\w]+)$', views.get_data, name='data'),
     # ex: /pdb/test-machine/06-mv-photons/pdd/interpolate
-    url(r'^(?P<machine_slug>\w+)/(?P<beam_slug>\w+)/(?P<data_slug>\w+)/interpolate$', views.interpolate, name='interpolate'),
+    url(r'^(?P<machine_slug>[-\w]+)/(?P<beam_slug>[-\w]+)/(?P<data_slug>[-\w]+)/interpolate$', views.interpolate, name='interpolate'),
 ]
