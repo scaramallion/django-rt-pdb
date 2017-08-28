@@ -6,8 +6,6 @@ import re
 
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response, get_object_or_404
-from django.template import RequestContext
-from django.views.decorators.csrf import csrf_protect
 
 import numpy
 from scipy.interpolate import interp1d, interp2d
@@ -536,13 +534,14 @@ def _do_interpolate_2d(x, y, data):
 
     if x and (min(x_arr) <= x <= max(x_arr)):
         x_value_ok = True
-        x_neighbours = nsmallest(2, x_arr, key=lambda k: abs(k - x))
-        x_neighbours.sort()
 
     if y and (min(y_arr) <= y <= max(y_arr)):
         y_value_ok = True
-        y_neighbours = nsmallest(2, y_arr, key=lambda k: abs(k - y))
-        y_neighbours.sort()
+
+    x_neighbours = nsmallest(2, x_arr, key=lambda k: abs(k - x))
+    x_neighbours.sort()
+    y_neighbours = nsmallest(2, y_arr, key=lambda k: abs(k - y))
+    y_neighbours.sort()
 
     out = []
     for row in data['table_data']:

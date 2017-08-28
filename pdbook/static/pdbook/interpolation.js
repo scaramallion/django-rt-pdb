@@ -45,19 +45,17 @@ var updateTable = function(result, status) {
 function update2DTable(tableData) {
     if (tableData['x_value_ok'] == false) {
         document.getElementById("x-input").style.border = "1px solid #ef0c34";
-        // reset
     } else {
         document.getElementById("x-input").style.border = "1px solid #0099dd";
     };
 
     if (tableData['y_value_ok'] == false) {
         document.getElementById("y-input").style.border = "1px solid #ef0c34";
-        // reset
     } else {
         document.getElementById("y-input").style.border = "1px solid #0099dd";
     };
 
-    if (tableData['x_value_ok'] == true && tableData['y_value_ok']) {
+    if (tableData['x_value_ok'] == true && tableData['y_value_ok'] == true) {
         document.getElementById("x-a").innerHTML = tableData['x_values'][0]
         document.getElementById("x-b").innerHTML = tableData['x_values'][2]
         document.getElementById("y-a").innerHTML = tableData['y_values'][0]
@@ -71,13 +69,31 @@ function update2DTable(tableData) {
         document.getElementById("bl").innerHTML = tableData['table_data'][2][0]
         document.getElementById("bc").innerHTML = tableData['table_data'][2][1]
         document.getElementById("br").innerHTML = tableData['table_data'][2][2]
+    } else {
+        reset_2d_table();
     };
-}
+};
+
+function reset_2d_table() {
+    document.getElementById("x-a").innerHTML = ''
+    document.getElementById("x-b").innerHTML = ''
+    document.getElementById("y-a").innerHTML = ''
+    document.getElementById("y-b").innerHTML = ''
+    document.getElementById("tl").innerHTML = ''
+    document.getElementById("tc").innerHTML = ''
+    document.getElementById("tr").innerHTML = ''
+    document.getElementById("cl").innerHTML = ''
+    document.getElementById("interp-result").innerHTML = ''
+    document.getElementById("cr").innerHTML = ''
+    document.getElementById("bl").innerHTML = ''
+    document.getElementById("bc").innerHTML = ''
+    document.getElementById("br").innerHTML = ''
+};
 
 function update1DTable(tableData) {
     if (tableData['y_value_ok'] == false) {
         document.getElementById("y1-input").style.border = "1px solid #ef0c34";
-        // reset
+        reset_1d_table();
     } else {
         document.getElementById("y1-input").style.border = "1px solid #0099dd";
         document.getElementById("y1-a").innerHTML = tableData['y_values'][0]
@@ -86,4 +102,12 @@ function update1DTable(tableData) {
         document.getElementById("interp-result1").innerHTML = tableData['table_data'][1]
         document.getElementById("bl1").innerHTML = tableData['table_data'][2]
     };
-}
+};
+
+function reset_1d_table() {
+    document.getElementById("y1-a").innerHTML = ''
+    document.getElementById("y1-b").innerHTML = ''
+    document.getElementById("tl1").innerHTML = ''
+    document.getElementById("interp-result1").innerHTML = ''
+    document.getElementById("bl1").innerHTML = ''
+};
