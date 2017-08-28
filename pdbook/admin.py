@@ -27,6 +27,8 @@ class MachineAdmin(admin.ModelAdmin):
     inlines = [BeamTabular]
     ordering = ('visible_name',)
     exclude = ('slug',)
+    fields = ('machine_type', 'manufacturer', 'model', 'serial_number',
+              'name', 'visible_name', 'description', 'slug')
 
     def get_readonly_fields(self, request, obj=None):
         fields = []
@@ -41,6 +43,8 @@ class BeamAdmin(admin.ModelAdmin):
     inlines = [DataTabular]
     ordering = ('machine', 'modality', 'name',)
     exclude = ('slug',)
+    fields = ('machine', 'modality', 'energy', 'name', 'visible_name',
+              'description', 'slug')
 
     def get_readonly_fields(self, request, obj=None):
         fields = []
@@ -54,6 +58,8 @@ class DataAdmin(admin.ModelAdmin):
     list_display = ('html_visible_name', 'beam', 'name')
     ordering = ('beam', 'name',)
     exclude = ('slug',)
+    fields = ('beam', 'data', 'interpolation_type', 'show_y_values', 'name',
+              'visible_name', 'description', 'data_source', 'slug')
 
     def get_readonly_fields(self, request, obj=None):
         fields = []
