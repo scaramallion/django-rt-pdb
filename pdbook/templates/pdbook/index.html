@@ -69,15 +69,13 @@
       {% if machine_list %}
         <ul class="machine">
           {% for machine in machine_list %}
-            {% if machine == selected_machine %}
-              <li>
-                  <a class="selected" href="{{ machine.get_absolute_url }}" title="{{machine.description}}">{{ machine.visible_name|safe }}</a>
-              </li>
-            {% else %}
-              <li>
-                <a class="unselected" href="{{ machine.get_absolute_url }}" title="{{machine.description}}">{{ machine.visible_name|safe }}</a>
-              </li>
-            {% endif %}
+            <li>
+              {% if machine == selected_machine %}
+                <a class="selected" href="{{ machine.get_absolute_url }}" title="{{ machine.description }}">{{ machine.visible_name|safe }}</a>
+              {% else %}
+                <a class="unselected" href="{{ machine.get_absolute_url }}" title="{{ machine.description }}">{{ machine.visible_name|safe }}</a>
+              {% endif %}
+            </li>
           {% endfor %}
         </ul>
       {% else %}
@@ -88,15 +86,13 @@
       {% if beam_list %} 
         <ul class="beam">
           {% for beam in beam_list %}
-            {% if beam == selected_beam %}
-              <li>
-                <a class="selected" href="{{ beam.get_absolute_url }}">{{beam.visible_name|safe }}</a>
-              </li>
-            {% else %}
-              <li>
-                <a class="unselected" href="{{ beam.get_absolute_url }}">{{ beam.visible_name|safe }}</a>
-              </li>
-            {% endif %}
+            <li>
+              {% if beam == selected_beam %}
+                <a class="selected" href="{{ beam.get_absolute_url }}" title="{{ beam.description }}">{{beam.visible_name|safe }}</a>
+              {% else %}
+                <a class="unselected" href="{{ beam.get_absolute_url }}" title="{{ beam.description }}">{{ beam.visible_name|safe }}</a>
+              {% endif %}
+            </li>
           {% endfor %}
         </ul>
       {% else %}
@@ -109,15 +105,13 @@
       {% if data_list %}
         <ul class="data">
           {% for data in data_list %}
-            {% if data == selected_data %}
-              <li>
-                <a class="selected" title="{{data.data_about}}" href="{{ data.get_absolute_url }}">{{ data.visible_name|safe }}</a>
-              </li>
-            {% else %}
-              <li>
-                <a class="unselected" title="{{data.data_about}}" href="{{ data.get_absolute_url }}">{{ data.visible_name|safe }}</a>
-              </li>
-            {% endif %}
+            <li>
+              {% if data == selected_data %}
+                <a class="selected" title="{{ data.description }}" href="{{ data.get_absolute_url }}">{{ data.visible_name|safe }}</a>
+              {% else %}
+                <a class="unselected" title="{{ data.description }}" href="{{ data.get_absolute_url }}">{{ data.visible_name|safe }}</a>
+              {% endif %}
+            </li>
           {% endfor %}
         </ul>
       {% else %}
@@ -171,6 +165,36 @@
         {% endif %}
       {% endif %}
     </data_table>
+    <div id="modal-interpolate-1D">
+      {% if selected_data %}
+      <form method='post' id='interpolation-form-1D'>
+        {% csrf_token %}
+        <div class="interpolation-container">
+          <table class="interpolation-table">
+            <tr>
+              <td style="color: #666 !important;">{{ y_title|safe }}</td>
+              <td style="color: #666 !important;">{{ x_title|safe }}</td>
+            </tr>
+            <tr>
+              <td class="input-near" id="y1-a"></td>
+              <td id="tl1"></td>
+            </tr>
+            <tr>
+              <td><input id="y1-input" type="text"></td>
+              <td id="interp-result1"></td>
+            </tr>
+            <tr>
+              <td class="input-near" id="y1-b"></td>
+              <td id="bl1"></td>
+            </tr>
+          </table>
+        </div>
+        <div class="interp-btn">
+          <button type="submit" id="calculate">Calculate</button>
+        </div>
+      </form>
+      {% endif %}
+    </div>
     <div id="modal-interpolate-2D">
       {% if selected_data %}
       <form method='post' id='interpolation-form-2D'>
@@ -203,36 +227,6 @@
               <td id="bl"></td>
               <td id="bc"></td>
               <td id="br"></td>
-            </tr>
-          </table>
-        </div>
-        <div class="interp-btn">
-          <button type="submit" id="calculate">Calculate</button>
-        </div>
-      </form>
-      {% endif %}
-    </div>
-    <div id="modal-interpolate-1D">
-      {% if selected_data %}
-      <form method='post' id='interpolation-form-1D'>
-        {% csrf_token %}
-        <div class="interpolation-container">
-          <table class="interpolation-table">
-            <tr>
-              <td style="color: #666 !important;">{{ y_title|safe }}</td>
-              <td style="color: #666 !important;">{{ x_title|safe }}</td>
-            </tr>
-            <tr>
-              <td class="input-near" id="y1-a"></td>
-              <td id="tl1"></td>
-            </tr>
-            <tr>
-              <td><input id="y1-input" type="text"></td>
-              <td id="interp-result1"></td>
-            </tr>
-            <tr>
-              <td class="input-near" id="y1-b"></td>
-              <td id="bl1"></td>
             </tr>
           </table>
         </div>

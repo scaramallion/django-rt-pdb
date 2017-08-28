@@ -99,6 +99,71 @@ def get_beam(request, machine_slug, beam_slug):
 def get_data(request, machine_slug, beam_slug, data_slug):
     """Return a page with the table data for the selected Data.
 
+    CSV File Special Characters
+    ---------------------------
+    The hash character, #, is used to denote comments, the caret character, ^,
+    can be used to escape the delimiter character ','.
+
+    CSV File Keywords
+    -----------------
+    DESCRIPTION=
+        Optional. The description of the data. Supports HTML tags and unicode
+        characters. Will override the django Data model's description field.
+        Example: DESCRIPTION=Some sort of data
+    SOURCE=
+        Optional. The source of the data. Supports HTML tags and unicode
+        characters. Will override the django Data model's data_source field.
+        Example: SOURCE=Data source from somewhere
+    X_TITLE=
+        Optional. This is the displayed title for the X parameters. Supports
+        HTML tags and unicode characters.
+        Example: X_TITLE=Data source from somewhere
+    X_HEADERS=
+        Required, this is the displayed column labels. Supports HTML tags and
+        unicode characters.
+        Example: X_HEADERS=Depth<br/>(cm), 2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6,
+                 7 x 7, 8 x 8, 9 x 9, 10 x 10
+    X_FORMAT=
+        Optional, must be a valid python new stype formatting string. Used to
+        control the formatting of the X_VALUES values.
+        Example: X_FORMAT={:.1f}
+    X_VALUES=
+        Required if 2D data. For f(x, y) this is the X-values/ If using
+        interpolation then values should be ordered so they are increasing (and
+        the tabular data ordered in a corresponding manner).
+        Example: X_VALUES=2,3,4,5,6,7,8,9,10
+    Y_TITLE=
+        Optional. This is the displayed title for the Y parameters. Supports
+        HTML tags and unicode characters.
+        Example: Y_TITLE=Depth in water<br/>(cm)
+    Y_HEADERS=
+        Required, this is the displayed row labels. Supports HTML tags and
+        unicode characters.
+        Example: Y_HEADERS=2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8,
+                 9 x 9, 10 x 10
+    Y_FORMAT=
+        Optional, must be a valid python new stype formatting string. Used to
+        control the formatting of the Y_VALUES values.
+        Example: Y_FORMAT={:.1f}
+    Y_VALUES=
+        Required if interpolation is supported if or Y_HEADERS is missing. For
+        2D data f(x, y) or 1D data f(y), this is the Y-values. If using
+        interpolation then values should be ordered so they are increasing (and
+        then tabular data ordered in a corresponding manner).
+        Example: Y_VALUES=2, 3, 4, 5, 6, 7, 8, 9, 10
+    XY_FORMAT=
+        Optional, must be a valid python new stype formatting string. Used to
+        control the formatting of the XY_VALUES values.
+        Example: XY_FORMAT={:.3f}
+    XY_TYPE=
+        Optional, must be either 'NUMERIC' or 'VERBATIM'. if the table data is
+        to be displayed exactly as entered or contains non-numeric data then
+        use 'VERBATIM'. Interpolation is only supported with NUMERIC type data.
+        Example: XY_TYPE=VERBATIM
+
+    All lines that don't start with a keyword will be considered to be part of
+    the tabular data.
+
     Parameters
     ----------
     request : django.core.handlers.wsgi.WSGIRequest
@@ -281,81 +346,6 @@ def _read_data_file(data_obj):
     ------------------
     The hash character, #, is used to denote comments, the caret character, ^,
     can be used to escape the delimiter character ','.
-
-    Data File Variables
-    -------------------
-    X_TITLE
-    ~~~~~~~
-    Character string, may include HTML tags. One value allowed. The title of
-    the x variable data for f(x, y). Examples:
-        X_TITLE=Equivalent Field Size (cm)
-    
-    X_LABELS
-    ~~~~~~~~
-    Optional. Character strings, may include HTML tags. One label for each
-    column of data. The column labels in the table header.
-        X_LABELS=10X<br />10Y,20X<br />20Y,30X<br />30Y,40X<br />40Y
-        X_LABELS=Field Size (cm),Scatter Factor
-        X_LABELS=
-    
-    X_VALUES
-    ~~~~~~~~
-    Required if 2D. Numeric strings, may not include HTML tags. One value for each column of
-    data. The x variable data for f(x, y). Will be converted to floats.
-        X_VALUES=10.0,20.0,30.0,40.0
-    
-    X_FORMAT
-    ~~~~~~~~
-    If X_LABELS is blank then the X_VALUES will be converted to a string using
-    new style python string formatting. If a single format is supplied then
-    that format will apply to all the X_VALUES:
-        X_FORMATS={:.2f} # Display float values numeric strings with 2 decimal places
-    If multiple values are supplied then the format will be applied to the
-    corresponding X_VALUES value:
-        X_FORMATS={:.2f},{:.3f},{:.1f} (cm),{:.2f} # 10.00, 20.000, 30.0 (cm), 40.00
-
-    Y_TITLE
-    ~~~~~~~
-    Required. Character string, may include HTML tags. One value allowed.
-    The title of the y variable data for f(x, y) and f(y). Examples:
-        Y_TITLE=Depth (cm)
-        
-    Y_LABELS
-    ~~~~~~~~~
-    Optional. Character strings, may include HTML tags. One label for each
-    row of data. The row labels in the table header.
-        Y_LABELS=10X<br />10Y,20X<br />20Y,30X<br />30Y,40X<br />40Y
-        Y_LABELS=Field Size (cm),Scatter Factor
-        Y_LABELS=
-    
-    Y_VALUES
-    ~~~~~~~~
-    Required. Numeric strings, may not include HTML tags. One value for each row of
-    data. The y variable data for f(x, y) and f(y). Will be converted to floats.
-        Y_VALUES=1.0,2.0,5.0
-    
-    Y_FORMAT
-    ~~~~~~~~
-    If Y_LABELS is blank then the Y_VALUES will be converted to a string using
-    new style python string formatting. If a single format is supplied then
-    that format will apply to all the Y_VALUES:
-        Y_FORMAT={:.2f} # Display float values numeric strings with 2 decimal places
-
-    If multiple values are supplied then the format will be applied to the
-    corresponding Y_VALUES value:
-        Y_FORMAT={:.2f},{:.1f},{:.3f} (cm) # 1.00, 5.0 (cm), 2.000, 2.101, ...
-    
-    XY_FORMAT
-    ~~~~~~~~~
-    The values of the 1D/2D data will be converted to a string using
-    new style python string formatting. If a single format is supplied then
-    that format will apply to all the f(x, y) and f(y) values:
-        XY_FORMAT={:.3f} # Display float values numeric strings with 3 decimal places
-
-    If multiple values are supplied then the format will be applied to the
-    corresponding column of the table data:
-        XY_FORMAT={:.1f},{:.3f} # 1.0, 2.002, 2.004, 2.008, ...
-                                # 1.5, 2.123, 2.140, 2.180, ...
 
     Parameters
     ----------
