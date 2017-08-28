@@ -1,0 +1,28 @@
+# 30 cm SSD, Filter 1 Relative Output Factors
+
+# Metadata
+DESCRIPTION=M(field size) / M(5 cm \u00D8)<br />Measured at 30 cm SSD
+SOURCE=Pantak Databook V9 2016
+
+# Field size length
+X_TITLE=Relative Output Factor
+X_HEADERS=APPLICATOR,RELO
+X_FORMAT=
+X_VALUES=
+
+# Depth
+Y_TITLE=Applicator
+Y_HEADERS=2 cm \u00D8,4 cm \u00D8,5 cm \u00D8,6 cm \u00D8,6 x 8,8 cm \u00D8
+Y_FORMAT={:.1f}
+Y_VALUES=2,4,5,6,7.7,8
+
+# Table data
+XY_FORMAT={:.3f}
+XY_TYPE=NUMERIC
+0.913
+0.980
+1.000
+1.025
+1.048
+1.056
+

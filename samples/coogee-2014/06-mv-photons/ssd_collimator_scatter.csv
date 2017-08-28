@@ -1,0 +1,36 @@
+# 6 MV Collimator Scatter Factors
+
+# Metadata
+# M(field size)
+DESCRIPTION=M(field size) / M(10 x 10)<br/>Measured in air at isocenter with brass build-up cap
+SOURCE=Planning Data Book (28-04-2016)
+
+X_TITLE=S<sub>c</sub>
+X_HEADERS=FIELD SIZE^, X x Y<br />(cm),S<sub>c</sub>
+X_FORMAT=
+X_VALUES=
+
+# Equivalent field size
+Y_TITLE=Eq. Field Size<br />(cm<sup>2</sup>)
+Y_HEADERS=2.0 x 2.0,3.0 x 3.0,4.0 x 4.0,5.0 x 5.0,6.0 x 6.0,7.0 x 7.0,8.0 x 8.0,10.0 x 10.0,12.0 x 12.0,15.0 x 15.0,20.0 x 20.0,25.0 x 25.0,30.0 x 30.0,35.0 x 35.0,40.0 x 40.0
+Y_FORMAT={:.1f}
+Y_VALUES=2.0,3.0,4.0,5.0,6.0,7.0,8.0,10.0,12.0,15.0,20.0,25.0,30.0,35.0,40.0
+
+# Table data
+XY_FORMAT={:.3f}
+XY_TYPE=NUMERIC
+0.943
+0.956
+0.966
+0.975
+0.982
+0.987
+0.992
+1.000
+1.005
+1.011
+1.019
+1.024
+1.026
+1.028
+1.024
