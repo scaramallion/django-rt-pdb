@@ -478,7 +478,7 @@ def _do_interpolate_1d(y, data):
         y_neighbours = nsmallest(2, y_arr, key=lambda k: abs(k - y))
         y_neighbours.sort()
 
-    out = [val[1] for val in data['table_data']]
+    out = [val[-1] for val in data['table_data']]
     out = numpy.asarray(out, dtype=numpy.float)
     interp_func = interp1d(y_arr, out, kind='linear')
 
