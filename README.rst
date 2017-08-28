@@ -38,7 +38,7 @@ Adding Machines
 * Fill out the fields for:
 
   * Machine Type: Required, one of 'Linear Accelerator', 'Orthovoltage Unit' or
-  'Radiation Source'.
+    'Radiation Source'.
   * Manufacturer: Optional, the manufacturer of the machine.
   * Model: Optional, the model of the machine.
   * Serial Number: Optional, the machine's serial number.
@@ -75,9 +75,9 @@ Adding Data
   * Beam: Required, the beam this data belongs to.
   * Data: Required, upload the CSV file containing the data.
   * Interpolation type: Required, the type of interpolation available for the data,
-  one of 'No interpolation', '1D interpolation', '2D interpolation'.
+    one of 'No interpolation', '1D interpolation', '2D interpolation'.
   * Show Y Values: Optional, set to true to display both Y row labels and Y
-  parameter values.
+    parameter values.
   * Name: Required, the name to use for the data. Must be unique.
   * Visible Name: Required, the displayed name for the data.
   * Description: Optional, a description of the data.
