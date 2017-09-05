@@ -34,7 +34,8 @@ class Machine(models.Model):
         The text used in the machine selection link. May include HTML text
         formatting tags.
     """
-    description = models.CharField(max_length=100, blank=True,
+    description = models.CharField(max_length=100,
+                                   blank=True,
                                    help_text="A description of the machine.")
     machine_type = models.CharField(max_length=10, 
                                     choices=(('LINAC', 'Linear Accelerator'),
@@ -43,24 +44,31 @@ class Machine(models.Model):
                                             ),
                                     default='LINAC',
                                     help_text="The type of machine.")
-    manufacturer = models.CharField(max_length=100, blank=True,
+    manufacturer = models.CharField(max_length=100,
+                                    blank=True,
                                     help_text="The machine's manufacturer.")
-    model = models.CharField(max_length=100, blank=True,
+    model = models.CharField(max_length=100,
+                             blank=True,
                              help_text="The machine's model name/number.")
-    name = models.CharField(max_length=100, unique=True,
+    name = models.CharField(max_length=100,
+                            unique=True,
+                            blank=False,
+                            null=False,
                             help_text="The name to use for this machine, "
                                       "must be unique (case independant).")
     slug = models.SlugField(max_length=200,
                             help_text="The text that will be used for "
                                       "the machine's part of the url (derived "
                                       "from the Name value).")
-    serial_number = models.CharField(max_length=100, blank=True,
-                             help_text="The machine's serial number.")
+    serial_number = models.CharField(max_length=100,
+                                     blank=True,
+                                     help_text="The machine's serial number.")
     visible_name = models.CharField(max_length=100,
+                                    blank=False,
+                                    null=True,
                                     help_text="The (short) text that will be "
                                               "displayed as a name for this "
                                               "machine. HTML tags are supported.")
-    
 
     def __str__(self):
         """Return a str representation of the Machine."""
@@ -100,14 +108,23 @@ class Beam(models.Model):
         The text used in the beam selection link. May include HTML text
         formatting tags.
     """
-    description = models.CharField(max_length=100, blank=True,
+    description = models.CharField(max_length=100,
+                                   blank=True,
                                    help_text="A description of the beam.")
-    energy = models.FloatField(help_text="The nominal energy of the beam.")
+    energy = models.FloatField(blank=True,
+                               null=True,
+                               help_text="The nominal energy of the beam.")
     name = models.CharField(max_length=100,
+                            blank=False,
+                            null=True,
+                            #unique=True,
                             help_text="The name to use for this beam, "
                                       "must be unique (case independant).")
-    machine = models.ForeignKey(Machine, related_name="machine",
-                             help_text="The machine object this beam belongs to.")
+    machine = models.ForeignKey(Machine,
+                                blank=False,
+                                related_name="machine",
+                                help_text="The machine object this beam "
+                                          "belongs to.")
     modality = models.CharField(max_length=3, 
                                 choices=(('MVP', 'MV Photons'), 
                                          ('MVE', 'MeV Electrons'), 
@@ -121,9 +138,16 @@ class Beam(models.Model):
                                       "the beam's part of the url (derived "
                                       "from the Name value).")
     visible_name = models.CharField(max_length=100,
+                                    blank=False,
+                                    null=True,
                                     help_text="The (short) text that will be "
                                               "displayed as a name for this "
                                               "beam. HTML tags are supported.")
+
+
+    class Meta:
+        unique_together = ('name', 'machine')
+
 
     def __str__(self):
         """Return a str representation of the Beam."""
@@ -134,22 +158,8 @@ class Beam(models.Model):
         energy_mode = ''
         if self.modality != 'ISO':
             energy_mode = '({0} {1})'.format(self.energy, mode_str[self.modality])
-        # TODO: Sort by machine name then photons, electrons, then energy
         s = "{1} - {0}".format(self.visible_name, self.machine.visible_name)
         return s
-
-    def validate_unique(self, exclude=None):
-        """All Beam objects for a given Machine must have a unique `name`."""
-        # Get a list of all the Beam objects for the current Machine
-        beams = Beam.objects.filter(machine=self.machine)
-        beam_names = [b.name for b in beams]
-
-        if self.name in beam_names and self not in beams:
-            raise ValidationError("A Beam entry with the name '{}' already "
-                                  "exists for the current Machine."
-                                  .format(self.name))
-        
-        return super(Beam, self).validate_unique(exclude)
 
     def get_absolute_url(self):
         """Return the absolute url for the Beam"""
@@ -221,6 +231,7 @@ class Data(models.Model):
     """
     class Meta:
         verbose_name_plural = "Data"
+        unique_together = ('name', 'beam')
     
     objects = DataManager()
     
@@ -246,7 +257,7 @@ class Data(models.Model):
     show_y_values = models.BooleanField(default=False,
                                         help_text="Show the Y parameter values "
                                         "in addition to the Y row labels.")
-    name = models.CharField(max_length=100, unique=True,
+    name = models.CharField(max_length=100,
                             help_text="The name to use for the table data, "
                                       "must be unique (case independant).")
     slug = models.SlugField(max_length=200,
@@ -265,19 +276,6 @@ class Data(models.Model):
     def html_visible_name(self):
         """Return a non-escaped `visible_name`."""
         return format_html('{}', mark_safe(self.visible_name))
-
-    def validate_unique(self, exclude=None):
-        """All Data objects for a given Beam must have a unique `name`."""
-        # Get a list of all the Data objects for the current Beam
-        data = Data.objects.filter(beam=self.beam)
-        data_names = [d.name for d in data]
-
-        if self.name in data_names and self not in data:
-            raise ValidationError("A Data entry with the name '{}' already "
-                                  "exists for the current Beam."
-                                  .format(self.name))
-        
-        return super(Data, self).validate_unique(exclude)
 
     def get_absolute_url(self):
         """Return the absolute url for the Data"""

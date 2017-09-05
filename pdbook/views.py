@@ -54,11 +54,10 @@ def get_machine(request, machine_slug):
     beam_list = _get_beams(m)
 
     # Build response
-    context = {}
+    context = {'machine_list' : machine_list,
+               'selected_machine' : m}
     if beam_list:
-        context = {'machine_list' : machine_list,
-                   'beam_list' : beam_list,
-                   'selected_machine' : m}
+        context['beam_list'] = beam_list
 
     return render(request, 'pdbook/index.html', context)
 
@@ -86,13 +85,12 @@ def get_beam(request, machine_slug, beam_slug):
     data_list = _get_data(b)
 
     # Build response
-    context = {}
-    if beam_list:
-        context = {'machine_list' : machine_list,
-                   'beam_list' : beam_list,
-                   'data_list' : data_list,
-                   'selected_machine' : m,
-                   'selected_beam' : b}
+    context = {'machine_list' : machine_list,
+               'beam_list' : beam_list,
+               'selected_machine' : m,
+               'selected_beam' : b}
+    if data_list:
+        context['data_list'] = data_list
 
     return render(request, 'pdbook/index.html', context)
 
@@ -187,39 +185,23 @@ def get_data(request, machine_slug, beam_slug, data_slug):
     beam_list = _get_beams(m)
     data_list = _get_data(b)
 
+    context = {'machine_list' : machine_list,
+               'beam_list' : beam_list,
+               'data_list' : data_list,
+               'selected_machine' : m,
+               'selected_beam' : b,
+               'selected_data' : d,
+               'description' : d.description,
+               'source' : d.data_source}
+
     # Parse the data
     try:
         table_data = _read_data_file(d)
+        context.update(table_data)
     except Exception as ex:
-        table_data = 'There was an error reading the data file'
+        context['error_message'] = 'There was an error reading the data file'
 
-    if isinstance(table_data, str):
-        context = {}
-        if beam_list:
-            context = {'machine_list' : machine_list,
-                       'beam_list' : beam_list,
-                       'data_list' : data_list,
-                       'selected_machine' : m,
-                       'selected_beam' : b,
-                       'selected_data' : d,
-                       'error_message' : table_data,
-                       'description' : d.description,
-                       'source' : d.data_source}
-        response = render(request, 'pdbook/index.html', context)
-    else:
-        context = {}
-        if beam_list:
-            context = {'machine_list' : machine_list,
-                       'beam_list' : beam_list,
-                       'data_list' : data_list,
-                       'selected_machine' : m,
-                       'selected_beam' : b,
-                       'selected_data' : d}
-        if table_data:
-            context.update(table_data)
-        response = render(request, 'pdbook/index.html', context)
-
-    return response
+    return render(request, 'pdbook/index.html', context)
 
 def interpolate(request, machine_slug, beam_slug, data_slug):
     """Returns the results from the interpolation widget
@@ -272,15 +254,15 @@ def interpolate(request, machine_slug, beam_slug, data_slug):
 
 def _get_machines():
     """Return a list of Machine model objects, sorted by name"""
-    return Machine.objects.order_by('-name')[:].reverse
+    return Machine.objects.order_by('-name')[:].reverse()
 
 def _get_beams(machine):
     """Return a list of Beam model objects for Machine `machine`, sorted by modality and name"""
-    return Beam.objects.filter(machine=machine).order_by('modality', '-name')[:].reverse
+    return Beam.objects.filter(machine=machine).order_by('modality', '-name')[:].reverse()
 
 def _get_data(beam):
     """Return a list of Data model objects for Beam `beam`, sorted by name"""
-    return Data.objects.filter(beam=beam).order_by('-name')[:].reverse
+    return Data.objects.filter(beam=beam).order_by('-name')[:].reverse()
 
 def _parse_csv_row(row):
     """Parse the CSV row, returning variables and values.

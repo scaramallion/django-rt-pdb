@@ -1,0 +1,26 @@
+dist: trusty
+sudo: false
+
+language: python
+
+python:
+ - "3.4"
+ - "3.5"
+ - "3.6"
+
+cache:
+  apt: true
+  directories:
+  - $HOME/.cache/pip
+  - $HOME/.cache
+  
+services:
+
+env:
+  -DJANGO_VERSION=1.11
+
+install:
+
+script:
+ - python manage.py test
+ 

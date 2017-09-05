@@ -26,47 +26,49 @@ class MachineAdmin(admin.ModelAdmin):
     list_display = ('visible_name', 'manufacturer', 'model', 'serial_number')
     inlines = [BeamTabular]
     ordering = ('visible_name',)
-    exclude = ('slug',)
+    
     fields = ('machine_type', 'manufacturer', 'model', 'serial_number',
-              'name', 'visible_name', 'description', 'slug')
+              'name', 'visible_name', 'description',)
+    
+    #exclude = ('slug',)
 
     def get_readonly_fields(self, request, obj=None):
-        fields = []
+        # When an object already exists, make readonly
         if obj:
-            fields += ['slug']
+            return self.readonly_fields + ('slug',)
 
-        return fields
+        return self.readonly_fields
 
 
 class BeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'machine', 'visible_name', 'energy', 'modality')
     inlines = [DataTabular]
     ordering = ('machine', 'modality', 'name',)
-    exclude = ('slug',)
+    #exclude = ('slug',)
     fields = ('machine', 'modality', 'energy', 'name', 'visible_name',
-              'description', 'slug')
+              'description',)
 
     def get_readonly_fields(self, request, obj=None):
-        fields = []
+        # When an object already exists, make readonly
         if obj:
-            fields += ['slug']
+            return self.readonly_fields + ('slug',)
 
-        return fields
+        return self.readonly_fields
 
 
 class DataAdmin(admin.ModelAdmin):
     list_display = ('html_visible_name', 'beam', 'name')
     ordering = ('beam', 'name',)
-    exclude = ('slug',)
+    #exclude = ('slug',)
     fields = ('beam', 'data', 'interpolation_type', 'show_y_values', 'name',
-              'visible_name', 'description', 'data_source', 'slug')
+              'visible_name', 'description', 'data_source',)
 
     def get_readonly_fields(self, request, obj=None):
-        fields = []
+        # When an object already exists, make readonly
         if obj:
-            fields += ['slug']
+            return self.readonly_fields + ('slug',)
 
-        return fields
+        return self.readonly_fields
 
 
 admin.site.register(Machine, MachineAdmin)
