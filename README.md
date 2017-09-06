@@ -85,7 +85,7 @@ not recommended for use on anything public facing.
 ## Tabular Data CSV File Format
 Tabular data should stored in CSV files (with comma ',' as the delimiter character,
 caret '^' as an escape character and hash '#' as a comment character). See the
-`samples <samples>`_ directory for example CSV files.
+![samples](samples) directory for example CSV files.
 
 ### CSV File Keywords
 <dl>
