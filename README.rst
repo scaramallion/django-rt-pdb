@@ -2,7 +2,8 @@
 pdbook
 ======
 *pdbook* is a Django app to display radiotherapy planning data in an easily
-accessible tabular form.
+accessible tabular form. It should only be used for internal sites and is
+not recommended for use on anything public facing.
 
 Screenshots
 -----------
@@ -83,6 +84,74 @@ Adding Data
   * Description: Optional, a description of the data.
   * Data Source: Optional, a description of the source used for the data.
 * Once all the required fields are filled out, click 'Save'
+
+CSV File Format
+---------------
+Tabular data should be added to CSV files (with comma ',' as the delimiter character,
+caret '^' as an escape character and hash '#' as a comment character). See the
+`samples<samples>`_ directory for example CSV files.
+
+CSV File Keywords
+-----------------
+
+DESCRIPTION=
+    Optional. The description of the data. Supports HTML tags and unicode
+    characters. Will override the django Data model's description field.
+    Example: DESCRIPTION=Some sort of data
+SOURCE=
+    Optional. The source of the data. Supports HTML tags and unicode
+    characters. Will override the django Data model's data_source field.
+    Example: SOURCE=Data source from somewhere
+X_TITLE=
+    Optional. This is the displayed title for the X parameters. Supports
+    HTML tags and unicode characters.
+    Example: X_TITLE=Data source from somewhere
+X_HEADERS=
+    Required, this is the displayed column labels. Supports HTML tags and
+    unicode characters.
+    Example: X_HEADERS=Depth<br/>(cm), 2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6,
+             7 x 7, 8 x 8, 9 x 9, 10 x 10
+X_FORMAT=
+    Optional, must be a valid python new stype formatting string. Used to
+    control the formatting of the X_VALUES values.
+    Example: X_FORMAT={:.1f}
+X_VALUES=
+    Required if 2D data. For f(x, y) this is the X-values/ If using
+    interpolation then values should be ordered so they are increasing (and
+    the tabular data ordered in a corresponding manner).
+    Example: X_VALUES=2,3,4,5,6,7,8,9,10
+Y_TITLE=
+    Optional. This is the displayed title for the Y parameters. Supports
+    HTML tags and unicode characters.
+    Example: Y_TITLE=Depth in water<br/>(cm)
+Y_HEADERS=
+    Required, this is the displayed row labels. Supports HTML tags and
+    unicode characters.
+    Example: Y_HEADERS=2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8,
+             9 x 9, 10 x 10
+Y_FORMAT=
+    Optional, must be a valid python new stype formatting string. Used to
+    control the formatting of the Y_VALUES values.
+    Example: Y_FORMAT={:.1f}
+Y_VALUES=
+    Required if interpolation is supported if or Y_HEADERS is missing. For
+    2D data f(x, y) or 1D data f(y), this is the Y-values. If using
+    interpolation then values should be ordered so they are increasing (and
+    then tabular data ordered in a corresponding manner).
+    Example: Y_VALUES=2, 3, 4, 5, 6, 7, 8, 9, 10
+XY_FORMAT=
+    Optional, must be a valid python new stype formatting string. Used to
+    control the formatting of the XY_VALUES values.
+    Example: XY_FORMAT={:.3f}
+XY_TYPE=
+    Optional, must be either 'NUMERIC' or 'VERBATIM'. if the table data is
+    to be displayed exactly as entered or contains non-numeric data then
+    use 'VERBATIM'. Interpolation is only supported with NUMERIC type data.
+    Example: XY_TYPE=VERBATIM
+
+All lines that don't start with a keyword will be considered to be part of
+the tabular data.
+
 
 Dependencies
 ------------
