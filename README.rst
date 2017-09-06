@@ -8,6 +8,15 @@ not recommended for use on anything public facing.
 Screenshots
 -----------
 
+.. image:: samples/linac-6X-pdd.png
+    :width: 200 px
+
+.. image:: samples/linac-6X-tpr-interp.png
+    :width: 200 px
+
+.. image:: samples/ortho-30-bsf-info.png
+    :width: 200 px
+
 Quick Start
 -----------
 
