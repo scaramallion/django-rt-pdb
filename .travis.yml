@@ -9,13 +9,14 @@ python:
  - "3.6"
   
 env:
-  -DJANGO_VERSION=1.11
+  - DJANGO_PKG="Django==1.11"
 
 install:
+ - pip install $DJANGO_PKG
  - pip install .
 
 script:
- - python manage.py test
+ - PYTHONPATH=. DJANGO_SETTINGS_MODULE=tests.test_settings django_admin test
 
 notifications:
     email: false
