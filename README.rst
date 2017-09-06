@@ -107,22 +107,21 @@ SOURCE=
     
     ::
 
-        SOURCE=Data source from somewhere
+        SOURCE=Ata et al, <i>"Interesting data"</i>, Journal of Data, <b>8</b>, pp 2901-3 (1999)
 X_TITLE=
     Optional. This is the displayed title for the X parameters. Supports
     HTML tags and unicode characters.
     
     ::
 
-        X_TITLE=Data source from somewhere
+        X_TITLE=Field Size
 X_HEADERS=
     Required, this is the displayed column labels. Supports HTML tags and
     unicode characters.
     
     ::
 
-        X_HEADERS=Depth<br/>(cm), 2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6,
-        7 x 7, 8 x 8, 9 x 9, 10 x 10
+        X_HEADERS=Depth<br/>(cm), 2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8, 9 x 9, 10 x 10
 X_FORMAT=
     Optional, must be a valid python new stype formatting string. Used to
     control the formatting of the X_VALUES values.
@@ -151,8 +150,7 @@ Y_HEADERS=
 
     ::
 
-        Y_HEADERS=2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8,
-        9 x 9, 10 x 10
+        Y_HEADERS=2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8, 9 x 9, 10 x 10
 Y_FORMAT=
     Optional, must be a valid python new stype formatting string. Used to
     control the formatting of the Y_VALUES values.
