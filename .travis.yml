@@ -15,7 +15,6 @@ env:
 # /home/travis/build/scaramallion/django-rt-pdb is wd
 install:
  - pip install $DJANGO_PKG
- - pip install .
 
 script:
  - django-admin.py test --settings=pdbook.tests.test_settings pdbook
