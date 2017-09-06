@@ -1,19 +1,15 @@
-======
-pdbook
-======
+
+# pdbook
+
 *pdbook* is a Django app to display radiotherapy planning data in an easily
 accessible tabular form. It should only be used for internal sites and is
 not recommended for use on anything public facing.
 
-Screenshots
------------
+## Screenshots
 
-<img src=samples/linac-6X-pdd.png width="30%" />
-<img src=samples/linac-6X-tpr-interp.png width="30%" />
-<img src=samples/ortho-30-bsf-info.png width="30%" />
+<img src=samples/linac-6X-pdd.png width="30%" /> <img src=samples/linac-6X-tpr-interp.png width="30%" /> <img src=samples/ortho-30-bsf-info.png width="30%" />
 
-Quick Start
------------
+## Quick Start
 
 1. Add *pdbook* to your ``INSTALLED_APPS`` setting:
 
@@ -35,8 +31,7 @@ Quick Start
    your *Machines*, *Beams* and *Data* (you'll need the Admin app enabled).
 5. Visit http://127.0.0.1:8000/pdb/ to view the planning data.
 
-Adding Machines
-~~~~~~~~~~~~~~~
+### Adding Machines
 
 * Login to the admin site and under the *Planning Data Book* section, click on
   'Machines' then 'Add Machine'.
@@ -52,8 +47,7 @@ Adding Machines
   * Description: Optional, the machine's description.
 * Once all the required fields are filled out, click 'Save'.
 
-Adding Beams
-~~~~~~~~~~~~
+### Adding Beams
 
 * Login to the admin site and under the *Planning Data Book* section, click on
   'Machines' then click on the name of the machine you wish to add beams to.
@@ -69,8 +63,7 @@ Adding Beams
   * Description: Optional, a description of the beam.
 * Once all the required fields are filled out, click 'Save'.
 
-Adding Data
-~~~~~~~~~~~
+### Adding Data
 
 * Login to the admin site and under the *Planning Data Book* section, click on
   'Beams' then click on the name of the beam you wish to add data to.
@@ -89,14 +82,12 @@ Adding Data
   * Data Source: Optional, a description of the source used for the data.
 * Once all the required fields are filled out, click 'Save'
 
-Tabular Data CSV File Format
-----------------------------
+## Tabular Data CSV File Format
 Tabular data should stored in CSV files (with comma ',' as the delimiter character,
 caret '^' as an escape character and hash '#' as a comment character). See the
 `samples <samples>`_ directory for example CSV files.
 
-CSV File Keywords
-~~~~~~~~~~~~~~~~~
+### CSV File Keywords
 
 DESCRIPTION=
     Optional. The description of the data. Supports HTML tags and unicode
@@ -194,8 +185,7 @@ All lines that don't start with a keyword will be considered to be part of
 the tabular data as f(x, y) or f(y).
 
 
-Dependencies
-------------
+## Dependencies
 
 * `django <https://www.djangoproject.com>`_
 * `numpy <https://www.numpy.org>`_ and `scipy <https://www.scipy.org>`_ (for data interpolation)
