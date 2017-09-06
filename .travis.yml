@@ -12,14 +12,13 @@ python:
 env:
   - DJANGO_PKG="Django==1.11"
 
+# /home/travis/build/scaramallion/django-rt-pdb is wd
 install:
  - pip install $DJANGO_PKG
  - pip install .
 
 script:
- - ls ./
- - pwd ./
-
+ - django-admin.py test --settings=pdbook.tests.test_settings pdbook
 notifications:
     email: false
  
