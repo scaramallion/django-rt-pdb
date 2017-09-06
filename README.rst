@@ -9,13 +9,13 @@ Screenshots
 -----------
 
 .. image:: samples/linac-6X-pdd.png
-    :width: 200 px
+    :width: 200px
 
 .. image:: samples/linac-6X-tpr-interp.png
-    :width: 200 px
+    :width: 200px
 
 .. image:: samples/ortho-30-bsf-info.png
-    :width: 200 px
+    :width: 200px
 
 Quick Start
 -----------
