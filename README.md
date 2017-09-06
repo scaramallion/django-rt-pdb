@@ -94,71 +94,80 @@ caret '^' as an escape character and hash '#' as a comment character). See the
     characters. Will override the <i>Data</i> model's <b>description</b> field. Any commas
     in the value will be automatically escaped.
     <br />
-    DESCRIPTION=Some sort of data taken from somewhere
+    <code>DESCRIPTION=Some sort of data taken from somewhere</code>
   </dd>
   <dt>SOURCE=</dt>
   <dd>    Optional. The source of the data. Supports HTML tags and unicode
     characters. Will override the *Data* model's **data_source** field. Any commas
     in the value will be automatically escaped.
     <br />
-        SOURCE=Ata et al, <i>"Interesting data"</i>, Journal of Data, <b>8</b>, pp 2901-3 (1999)
+    <code>SOURCE=Ata et al, <i>"Interesting data"</i>, Journal of Data, <b>8</b>, pp 2901-3 (1999)</code>
   </dd>
   <dt>X_TITLE=</dt>
   <dd>Optional. This is the displayed title for the X parameter. Supports
     HTML tags and unicode characters.
     <br />
-        X_TITLE=Field Size
+    <code>X_TITLE=Field Size</code>
   </dd>
   <dt>X_HEADERS=</dt>
   <dd>Required, this is the displayed column labels. Supports HTML tags and
     unicode characters.
     <br />
-        X_HEADERS=Depth<br/>(cm), 2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8, 9 x 9, 10 x 10</dd>
+    <code>X_HEADERS=Depth<br/>(cm), 2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8, 9 x 9, 10 x 10</code>
+  </dd>
   <dt>X_FORMAT=</dt>
   <dd>Optional, must be a valid python new style formatting string. Used to
     control the formatting of the X_VALUES values.
     <br />
-        X_FORMAT={:.1f}</dd>
+    <code>X_FORMAT={:.1f}</code>
+  </dd>
   <dt>X_VALUES=</dt>
   <dd>Required if 2D data. For f(x, y) these are the X parameter values. If using
     interpolation then values should be ordered so they are increasing (and
     the tabular data ordered to match).
     <br />
-        X_VALUES=2,3,4,5,6,7,8,9,10</dd>
+    <code>X_VALUES=2,3,4,5,6,7,8,9,10</code>
+  </dd>
   <dt>Y_TITLE=</dt>
   <dd>Optional. This is the displayed title for the Y parameter. Supports
     HTML tags and unicode characters.
     <br />
-        Y_TITLE=Depth in water<br/>(cm)</dd>
+    <code>Y_TITLE=Depth in water<br/>(cm)</code>
+  </dd>
   <dt>Y_HEADERS=</dt>
   <dd>Required, these are the displayed row labels. Supports HTML tags and
     unicode characters.
     <br />
-        Y_HEADERS=2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8, 9 x 9, 10 x 10</dd>
+    <code>Y_HEADERS=2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8, 9 x 9, 10 x 10</code>
+  </dd>
   <dt>Y_FORMAT=</dt>
   <dd>Optional, must be a valid python new style formatting string. Used to
     control the formatting of the Y_VALUES values.
     <br />
-        Y_FORMAT={:.1f}</dd>
+    <code>Y_FORMAT={:.1f}</code>
+  </dd>
   <dt>Y_VALUES=</dt>
   <dd>Required if interpolation is supported if or Y_HEADERS is missing. For
     2D data f(x, y) or 1D data f(y), these are the Y parameter values. If using
     interpolation then values should be ordered so they are increasing (and
     the tabular data ordered to match).
     <br />
-        Y_VALUES=2, 3, 4, 5, 6, 7, 8, 9, 10</dd>
+    <code>Y_VALUES=2, 3, 4, 5, 6, 7, 8, 9, 10</code>
+  </dd>
   <dt>XY_FORMAT=</dt>
   <dd>Optional, must be a valid python new style formatting string. Used to
     control the formatting of the tabular data values.
     <br />
-        XY_FORMAT={:.3f}</dd>
+    <code>XY_FORMAT={:.3f}</code>
+  </dd>
   <dt>XY_TYPE=</dt>
   <dd>Optional, must be either 'NUMERIC' or 'VERBATIM', defaults to 'NUMERIC'.
     If the table data is to be displayed exactly as entered or contains
     non-numeric data then use 'VERBATIM'. Interpolation is only supported with
     NUMERIC type data.
     <br />
-        XY_TYPE=VERBATIM</dd>
+    <code>XY_TYPE=VERBATIM</code>
+  </dd>
 </dl>
 
 All lines that don't start with a keyword will be considered to be part of
