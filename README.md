@@ -8,11 +8,9 @@ not recommended for use on anything public facing.
 Screenshots
 -----------
 
-<img src="samples/linac-6X-pdd.png" width="250" />
-
-![](samples/linac-6X-tpr-interp.png | width=250)
-
-![](samples/ortho-30-bsf-info.png | width=250)
+<img src=samples/linac-6X-pdd.png width="30%" />
+<img src=samples/linac-6X-tpr-interp.png width="30%" />
+<img src=samples/ortho-30-bsf-info.png width="30%" />
 
 Quick Start
 -----------
