@@ -7,14 +7,14 @@ from django.conf import settings
 import django.test.utils
 
 settings.configure(
-    SECRET_KEY = 'testing'
+    SECRET_KEY = 'testing',
 
     DATABASES = {
         'default' : {
             'ENGINE' : 'django.db.backends.sqlite3',
             'NAME' : ':memory;',
         }
-    }
+    },
 
     INSTALLED_APPS = [
         'django.contrib.auth',
@@ -23,7 +23,7 @@ settings.configure(
         'django.contrib.messages',
         'django.contrib.staticfiles',
         'pdbook',
-    ]
+    ],
 
     TEMPLATES = [
         {
@@ -39,7 +39,7 @@ settings.configure(
                 ],
             },
         },
-    ]
+    ],
 )
 
 if __name__ == '__main__':
