@@ -85,14 +85,14 @@ Adding Data
   * Data Source: Optional, a description of the source used for the data.
 * Once all the required fields are filled out, click 'Save'
 
-CSV File Format
----------------
-Tabular data should be added to CSV files (with comma ',' as the delimiter character,
+Tabular Data CSV File Format
+----------------------------
+Tabular data should stored in CSV files (with comma ',' as the delimiter character,
 caret '^' as an escape character and hash '#' as a comment character). See the
-`samples<samples>`_ directory for example CSV files.
+`samples <samples>`_ directory for example CSV files.
 
 CSV File Keywords
------------------
+~~~~~~~~~~~~~~~~~
 
 DESCRIPTION=
     Optional. The description of the data. Supports HTML tags and unicode
@@ -110,13 +110,13 @@ X_HEADERS=
     Required, this is the displayed column labels. Supports HTML tags and
     unicode characters.
     Example: X_HEADERS=Depth<br/>(cm), 2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6,
-             7 x 7, 8 x 8, 9 x 9, 10 x 10
+    7 x 7, 8 x 8, 9 x 9, 10 x 10
 X_FORMAT=
     Optional, must be a valid python new stype formatting string. Used to
     control the formatting of the X_VALUES values.
     Example: X_FORMAT={:.1f}
 X_VALUES=
-    Required if 2D data. For f(x, y) this is the X-values/ If using
+    Required if 2D data. For f(x, y) this are the x values. If using
     interpolation then values should be ordered so they are increasing (and
     the tabular data ordered in a corresponding manner).
     Example: X_VALUES=2,3,4,5,6,7,8,9,10
@@ -128,14 +128,14 @@ Y_HEADERS=
     Required, this is the displayed row labels. Supports HTML tags and
     unicode characters.
     Example: Y_HEADERS=2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8,
-             9 x 9, 10 x 10
+    9 x 9, 10 x 10
 Y_FORMAT=
     Optional, must be a valid python new stype formatting string. Used to
     control the formatting of the Y_VALUES values.
     Example: Y_FORMAT={:.1f}
 Y_VALUES=
     Required if interpolation is supported if or Y_HEADERS is missing. For
-    2D data f(x, y) or 1D data f(y), this is the Y-values. If using
+    2D data f(x, y) or 1D data f(y), this are the y values. If using
     interpolation then values should be ordered so they are increasing (and
     then tabular data ordered in a corresponding manner).
     Example: Y_VALUES=2, 3, 4, 5, 6, 7, 8, 9, 10
@@ -144,13 +144,13 @@ XY_FORMAT=
     control the formatting of the XY_VALUES values.
     Example: XY_FORMAT={:.3f}
 XY_TYPE=
-    Optional, must be either 'NUMERIC' or 'VERBATIM'. if the table data is
-    to be displayed exactly as entered or contains non-numeric data then
-    use 'VERBATIM'. Interpolation is only supported with NUMERIC type data.
-    Example: XY_TYPE=VERBATIM
+    Optional, must be either 'NUMERIC' or 'VERBATIM', defaults to 'NUMERIC'.
+    If the table data is to be displayed exactly as entered or contains
+    non-numeric data then use 'VERBATIM'. Interpolation is only supported with
+    NUMERIC type data. Example: XY_TYPE=VERBATIM
 
 All lines that don't start with a keyword will be considered to be part of
-the tabular data.
+the tabular data as f(x, y) or f(y).
 
 
 Dependencies
