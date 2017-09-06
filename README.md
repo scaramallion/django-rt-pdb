@@ -176,9 +176,9 @@ the tabular data as f(x, y) or f(y).
 
 ## Dependencies
 
-* `django <https://www.djangoproject.com>`_
-* `numpy <https://www.numpy.org>`_ and `scipy <https://www.scipy.org>`_ (for data interpolation)
-* `jQuery <https://jquery.com>`_ (included)
-* `floatThead <https://github.com/mkoryak/floatThead>`_ (included)
-* `tablesaw <https://github.com/filamentgroup/tablesaw>`_ (included)
-* `leanModal.js <https://leanmodal.finelysliced.com.au>`_ (included)
+* ![django](https://www.djangoproject.com)
+* ![numpy](https://www.numpy.org) and ![scipy](https://www.scipy.org) (for data interpolation)
+* ![jQuery](https://jquery.com) (included)
+* ![floatThead](https://github.com/mkoryak/floatThead) (included)
+* ![tablesaw](https://github.com/filamentgroup/tablesaw) (included)
+* ![leanModal.js](https://leanmodal.finelysliced.com.au) (included)
