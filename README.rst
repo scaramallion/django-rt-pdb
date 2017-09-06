@@ -96,14 +96,16 @@ CSV File Keywords
 
 DESCRIPTION=
     Optional. The description of the data. Supports HTML tags and unicode
-    characters. Will override the django Data model's description field.
+    characters. Will override the *Data* model's **description** field. Any commas
+    in the value will be automatically escaped.
     
     ::
 
-        DESCRIPTION=Some sort of data^, taken from somewhere
+        DESCRIPTION=Some sort of data taken from somewhere
 SOURCE=
     Optional. The source of the data. Supports HTML tags and unicode
-    characters. Will override the django Data model's data_source field.
+    characters. Will override the *Data* model's **data_source** field. Any commas
+    in the value will be automatically escaped.
     
     ::
 
