@@ -11,22 +11,22 @@ not recommended for use on anything public facing.
 
 ## Quick Start
 
-1. Add *pdbook* to your ``INSTALLED_APPS`` setting:
+1. Add *pdbook* to your `INSTALLED_APPS` setting:
 
-.. code-block:: python
-
+```python
     INSTALLED_APPS = [
         ...
         'pdbook',
     ]
+```
 
-2. Include the *pdbook* URL configuration in your project's ``urls.py``:
+2. Include the *pdbook* URL configuration in your project's `urls.py`:
 
-.. code-block:: python
-
+```python
     url(r'^pdb/', include(pdbook.urls')),
+```
 
-3. Run ``python manage.py migrate`` to create the *pdbook* models in the database.
+3. Run `python manage.py migrate` to create the *pdbook* models in the database.
 4. Start the development server and visit http://127.0.0.1:8000/admin/ to add
    your *Machines*, *Beams* and *Data* (you'll need the Admin app enabled).
 5. Visit http://127.0.0.1:8000/pdb/ to view the planning data.
@@ -88,98 +88,78 @@ caret '^' as an escape character and hash '#' as a comment character). See the
 `samples <samples>`_ directory for example CSV files.
 
 ### CSV File Keywords
-
-DESCRIPTION=
-    Optional. The description of the data. Supports HTML tags and unicode
-    characters. Will override the *Data* model's **description** field. Any commas
+<dl>
+  <dt>DESCRIPTION=</dt>
+  <dd>Optional. The description of the data. Supports HTML tags and unicode
+    characters. Will override the <i>Data</i> model's <b>description</b> field. Any commas
     in the value will be automatically escaped.
-    
-    ::
-
-        DESCRIPTION=Some sort of data taken from somewhere
-SOURCE=
-    Optional. The source of the data. Supports HTML tags and unicode
+    <br />
+    DESCRIPTION=Some sort of data taken from somewhere
+  </dd>
+  <dt>SOURCE=</dt>
+  <dd>    Optional. The source of the data. Supports HTML tags and unicode
     characters. Will override the *Data* model's **data_source** field. Any commas
     in the value will be automatically escaped.
-    
-    ::
-
+    <br />
         SOURCE=Ata et al, <i>"Interesting data"</i>, Journal of Data, <b>8</b>, pp 2901-3 (1999)
-X_TITLE=
-    Optional. This is the displayed title for the X parameter. Supports
+  </dd>
+  <dt>X_TITLE=</dt>
+  <dd>Optional. This is the displayed title for the X parameter. Supports
     HTML tags and unicode characters.
-    
-    ::
-
+    <br />
         X_TITLE=Field Size
-X_HEADERS=
-    Required, this is the displayed column labels. Supports HTML tags and
+  </dd>
+  <dt>X_HEADERS=</dt>
+  <dd>Required, this is the displayed column labels. Supports HTML tags and
     unicode characters.
-    
-    ::
-
-        X_HEADERS=Depth<br/>(cm), 2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8, 9 x 9, 10 x 10
-X_FORMAT=
-    Optional, must be a valid python new style formatting string. Used to
+    <br />
+        X_HEADERS=Depth<br/>(cm), 2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8, 9 x 9, 10 x 10</dd>
+  <dt>X_FORMAT=</dt>
+  <dd>Optional, must be a valid python new style formatting string. Used to
     control the formatting of the X_VALUES values.
-    
-    ::
-
-        X_FORMAT={:.1f}
-X_VALUES=
-    Required if 2D data. For f(x, y) these are the X parameter values. If using
+    <br />
+        X_FORMAT={:.1f}</dd>
+  <dt>X_VALUES=</dt>
+  <dd>Required if 2D data. For f(x, y) these are the X parameter values. If using
     interpolation then values should be ordered so they are increasing (and
     the tabular data ordered to match).
-    
-    ::
-
-        X_VALUES=2,3,4,5,6,7,8,9,10
-Y_TITLE=
-    Optional. This is the displayed title for the Y parameter. Supports
+    <br />
+        X_VALUES=2,3,4,5,6,7,8,9,10</dd>
+  <dt>Y_TITLE=</dt>
+  <dd>Optional. This is the displayed title for the Y parameter. Supports
     HTML tags and unicode characters.
-    
-    ::
-
-        Y_TITLE=Depth in water<br/>(cm)
-Y_HEADERS=
-    Required, these are the displayed row labels. Supports HTML tags and
+    <br />
+        Y_TITLE=Depth in water<br/>(cm)</dd>
+  <dt>Y_HEADERS=</dt>
+  <dd>Required, these are the displayed row labels. Supports HTML tags and
     unicode characters.
-
-    ::
-
-        Y_HEADERS=2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8, 9 x 9, 10 x 10
-Y_FORMAT=
-    Optional, must be a valid python new style formatting string. Used to
+    <br />
+        Y_HEADERS=2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8, 9 x 9, 10 x 10</dd>
+  <dt>Y_FORMAT=</dt>
+  <dd>Optional, must be a valid python new style formatting string. Used to
     control the formatting of the Y_VALUES values.
-    
-    ::
-
-        Y_FORMAT={:.1f}
-Y_VALUES=
-    Required if interpolation is supported if or Y_HEADERS is missing. For
+    <br />
+        Y_FORMAT={:.1f}</dd>
+  <dt>Y_VALUES=</dt>
+  <dd>Required if interpolation is supported if or Y_HEADERS is missing. For
     2D data f(x, y) or 1D data f(y), these are the Y parameter values. If using
     interpolation then values should be ordered so they are increasing (and
     the tabular data ordered to match).
-    
-    ::
-
-        Y_VALUES=2, 3, 4, 5, 6, 7, 8, 9, 10
-XY_FORMAT=
-    Optional, must be a valid python new style formatting string. Used to
+    <br />
+        Y_VALUES=2, 3, 4, 5, 6, 7, 8, 9, 10</dd>
+  <dt>XY_FORMAT=</dt>
+  <dd>Optional, must be a valid python new style formatting string. Used to
     control the formatting of the tabular data values.
-    
-    ::
-
-        XY_FORMAT={:.3f}
-XY_TYPE=
-    Optional, must be either 'NUMERIC' or 'VERBATIM', defaults to 'NUMERIC'.
+    <br />
+        XY_FORMAT={:.3f}</dd>
+  <dt>XY_TYPE=</dt>
+  <dd>Optional, must be either 'NUMERIC' or 'VERBATIM', defaults to 'NUMERIC'.
     If the table data is to be displayed exactly as entered or contains
     non-numeric data then use 'VERBATIM'. Interpolation is only supported with
     NUMERIC type data.
-    
-    ::
-
-        XY_TYPE=VERBATIM
+    <br />
+        XY_TYPE=VERBATIM</dd>
+</dl>
 
 All lines that don't start with a keyword will be considered to be part of
 the tabular data as f(x, y) or f(y).
