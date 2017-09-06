@@ -109,7 +109,7 @@ SOURCE=
 
         SOURCE=Ata et al, <i>"Interesting data"</i>, Journal of Data, <b>8</b>, pp 2901-3 (1999)
 X_TITLE=
-    Optional. This is the displayed title for the X parameters. Supports
+    Optional. This is the displayed title for the X parameter. Supports
     HTML tags and unicode characters.
     
     ::
@@ -123,36 +123,36 @@ X_HEADERS=
 
         X_HEADERS=Depth<br/>(cm), 2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8, 9 x 9, 10 x 10
 X_FORMAT=
-    Optional, must be a valid python new stype formatting string. Used to
+    Optional, must be a valid python new style formatting string. Used to
     control the formatting of the X_VALUES values.
     
     ::
 
         X_FORMAT={:.1f}
 X_VALUES=
-    Required if 2D data. For f(x, y) this are the x values. If using
+    Required if 2D data. For f(x, y) these are the X parameter values. If using
     interpolation then values should be ordered so they are increasing (and
-    the tabular data ordered in a corresponding manner).
+    the tabular data ordered to match).
     
     ::
 
         X_VALUES=2,3,4,5,6,7,8,9,10
 Y_TITLE=
-    Optional. This is the displayed title for the Y parameters. Supports
+    Optional. This is the displayed title for the Y parameter. Supports
     HTML tags and unicode characters.
     
     ::
 
         Y_TITLE=Depth in water<br/>(cm)
 Y_HEADERS=
-    Required, this is the displayed row labels. Supports HTML tags and
+    Required, these are the displayed row labels. Supports HTML tags and
     unicode characters.
 
     ::
 
         Y_HEADERS=2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8, 9 x 9, 10 x 10
 Y_FORMAT=
-    Optional, must be a valid python new stype formatting string. Used to
+    Optional, must be a valid python new style formatting string. Used to
     control the formatting of the Y_VALUES values.
     
     ::
@@ -160,16 +160,16 @@ Y_FORMAT=
         Y_FORMAT={:.1f}
 Y_VALUES=
     Required if interpolation is supported if or Y_HEADERS is missing. For
-    2D data f(x, y) or 1D data f(y), this are the y values. If using
+    2D data f(x, y) or 1D data f(y), these are the Y parameter values. If using
     interpolation then values should be ordered so they are increasing (and
-    then tabular data ordered in a corresponding manner).
+    the tabular data ordered to match).
     
     ::
 
         Y_VALUES=2, 3, 4, 5, 6, 7, 8, 9, 10
 XY_FORMAT=
-    Optional, must be a valid python new stype formatting string. Used to
-    control the formatting of the XY_VALUES values.
+    Optional, must be a valid python new style formatting string. Used to
+    control the formatting of the tabular data values.
     
     ::
 
