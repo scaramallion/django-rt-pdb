@@ -8,8 +8,6 @@ python:
  - "3.5"
  - "3.6"
   
-services:
-
 env:
   -DJANGO_VERSION=1.11
 
@@ -19,6 +17,6 @@ install:
 script:
  - python manage.py test
 
- notifications:
+notifications:
     email: false
  
