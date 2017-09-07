@@ -105,7 +105,7 @@ illustrative purposes only and should not be used clinically, obviously).
   </dd>
   <dt>SOURCE=</dt>
   <dd>    Optional. The source of the data. Supports HTML tags and unicode
-    characters. Will override the *Data* model's **data_source** field. Any commas
+    characters. Will override the <i>Data</i> model's <b>data_source</b> field. Any commas
     in the value will be automatically escaped.
     <br />
     <code>SOURCE=Ata et al, <i>"Interesting data"</i>, Journal of Data, <b>8</b>, pp 2901-3 (1999)</code>
