@@ -120,7 +120,7 @@ illustrative purposes only and should not be used clinically, obviously).
   <dd>Required, this is the displayed column labels. Supports HTML tags and
     unicode characters.
     <br />
-    <code>X_HEADERS=Depth<br/>(cm), 2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8, 9 x 9, 10 x 10</code>
+    <code>X_HEADERS=Depth&lt;br/&gt;(cm), 2 x 2, 3 x 3, 4 x 4, 5 x 5, 6 x 6, 7 x 7, 8 x 8, 9 x 9, 10 x 10</code>
   </dd>
   <dt>X_FORMAT=</dt>
   <dd>Optional, must be a valid python new style formatting string. Used to
@@ -133,13 +133,13 @@ illustrative purposes only and should not be used clinically, obviously).
     interpolation then values should be ordered so they are increasing (and
     the tabular data ordered to match).
     <br />
-    <code>X_VALUES=2,3,4,5,6,7,8,9,10</code>
+    <code>X_VALUES=2, 3, 4, 5, 6, 7, 8, 9, 10</code>
   </dd>
   <dt>Y_TITLE=</dt>
   <dd>Optional. This is the displayed title for the Y parameter. Supports
     HTML tags and unicode characters.
     <br />
-    <code>Y_TITLE=Depth in water<br/>(cm)</code>
+    <code>Y_TITLE=Depth in water&lt;br/&gt;(cm)</code>
   </dd>
   <dt>Y_HEADERS=</dt>
   <dd>Required, these are the displayed row labels. Supports HTML tags and
