@@ -108,7 +108,7 @@ illustrative purposes only and should not be used clinically, obviously).
     characters. Will override the <i>Data</i> model's <b>data_source</b> field. Any commas
     in the value will be automatically escaped.
     <br />
-    <code>SOURCE=Ata et al, <i>"Interesting data"</i>, Journal of Data, <b>8</b>, pp 2901-3 (1999)</code>
+    <code>SOURCE=Ata et al, &lt;i&gt;"Interesting data"&lt;/i&gt;, Journal of Data, &lt;b&gt;8&lt;/b&gt;, pp 2901-3 (1999)</code>
   </dd>
   <dt>X_TITLE=</dt>
   <dd>Optional. This is the displayed title for the X parameter. Supports
