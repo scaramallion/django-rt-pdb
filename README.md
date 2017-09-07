@@ -179,6 +179,9 @@ caret '^' as an escape character and hash '#' as a comment character). See the
 All lines that don't start with a keyword will be considered to be part of
 the tabular data as f(x, y) or f(y).
 
+## Bugs and Issues
+While I welcome PRs, I won't be supporting this project beyond fixing major bugs.
+
 
 ## Dependencies
 
