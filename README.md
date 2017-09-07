@@ -23,13 +23,19 @@ not recommended for use on anything public facing.
 2. Include the *pdbook* URL configuration in your project's `urls.py`:
 
 ```python
-    url(r'^pdb/', include(pdbook.urls')),
+from django.conf.urls import include
+
+urlpatterns = [
+    ...
+    url(r'^pdb/', include('pdbook.urls')),
+]
 ```
 
-3. Run `python manage.py migrate` to create the *pdbook* models in the database.
-4. Start the development server and visit http://127.0.0.1:8000/admin/ to add
+3. Add the templates and static files as required by your project.
+4. Run `python manage.py migrate` to create the *pdbook* models in the database.
+5. Start the development server and visit http://127.0.0.1:8000/admin/ to add
    your *Machines*, *Beams* and *Data* (you'll need the Admin app enabled).
-5. Visit http://127.0.0.1:8000/pdb/ to view the planning data.
+6. Visit http://127.0.0.1:8000/pdb/ to view the planning data.
 
 ### Adding Machines
 
@@ -176,9 +182,9 @@ the tabular data as f(x, y) or f(y).
 
 ## Dependencies
 
-* ![django](https://www.djangoproject.com)
-* ![numpy](https://www.numpy.org) and ![scipy](https://www.scipy.org) (for data interpolation)
-* ![jQuery](https://jquery.com) (included)
-* ![floatThead](https://github.com/mkoryak/floatThead) (included)
-* ![tablesaw](https://github.com/filamentgroup/tablesaw) (included)
-* ![leanModal.js](https://leanmodal.finelysliced.com.au) (included)
+* [django](https://www.djangoproject.com)
+* [numpy](https://www.numpy.org) and [scipy](https://www.scipy.org) (for data interpolation)
+* [jQuery](https://jquery.com) (included)
+* [floatThead](https://github.com/mkoryak/floatThead) (included)
+* [tablesaw](https://github.com/filamentgroup/tablesaw) (included)
+* [leanModal.js](https://leanmodal.finelysliced.com.au) (included)
