@@ -91,7 +91,8 @@ urlpatterns = [
 ## Tabular Data CSV File Format
 Tabular data should stored in CSV files (with comma ',' as the delimiter character,
 caret '^' as an escape character and hash '#' as a comment character). See the
-![samples](samples) directory for example CSV files.
+![samples](samples) directory for example CSV files (all sample data is for
+illustrative purposes only and should not be used clinically, obviously).
 
 ### CSV File Keywords
 <dl>
