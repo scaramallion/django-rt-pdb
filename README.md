@@ -24,10 +24,11 @@ not recommended for use on anything public facing.
 
 ```python
 from django.conf.urls import include
+from django.urls import path
 
 urlpatterns = [
     ...
-    url(r'^pdb/', include('pdbook.urls')),
+    path(r'pdb/', include('pdbook.urls')),
 ]
 ```
 

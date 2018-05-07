@@ -37,7 +37,7 @@ class Machine(models.Model):
     description = models.CharField(max_length=100,
                                    blank=True,
                                    help_text="A description of the machine.")
-    machine_type = models.CharField(max_length=10, 
+    machine_type = models.CharField(max_length=10,
                                     choices=(('LINAC', 'Linear Accelerator'),
                                              ('ORTHO', 'Orthovoltage Unit'),
                                              ('SOURCE', 'Radiation Source'),
@@ -124,10 +124,11 @@ class Beam(models.Model):
                                 blank=False,
                                 related_name="machine",
                                 help_text="The machine object this beam "
-                                          "belongs to.")
-    modality = models.CharField(max_length=3, 
-                                choices=(('MVP', 'MV Photons'), 
-                                         ('MVE', 'MeV Electrons'), 
+                                          "belongs to.",
+                                on_delete=models.CASCADE)
+    modality = models.CharField(max_length=3,
+                                choices=(('MVP', 'MV Photons'),
+                                         ('MVE', 'MeV Electrons'),
                                          ('KVP', 'kV Photons'),
                                          ('ISO', 'Radioisotope'),
                                         ),
@@ -202,7 +203,7 @@ class DataManager(models.Manager):
         """
         m_slug = instance.beam.machine.slug
         b_slug = instance.beam.slug
-        return '{0}/{1}/{2}'.format(m_slug, b_slug, filename) 
+        return '{0}/{1}/{2}'.format(m_slug, b_slug, filename)
 
 
 class Data(models.Model):
@@ -232,11 +233,12 @@ class Data(models.Model):
     class Meta:
         verbose_name_plural = "Data"
         unique_together = ('name', 'beam')
-    
+
     objects = DataManager()
-    
+
     beam = models.ForeignKey(Beam, related_name="beam_name", default=0,
-                             help_text="The beam object this data belongs to.")
+                             help_text="The beam object this data belongs to.",
+                             on_delete=models.CASCADE)
     data = models.FileField(upload_to=objects._upload_directory_path,
                             storage=OverwriteStorage(),
                             help_text="The CSV file containing the table data.")
@@ -288,4 +290,3 @@ class Data(models.Model):
         """Regenerate the slug every time the object gets saved"""
         self.slug = slugify(self.name)
         super(Data, self).save(*args, **kwargs)
-        
